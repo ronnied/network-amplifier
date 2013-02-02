@@ -1,20 +1,25 @@
 import wiringpi
-import time
+from time import sleep
 
 ######################################
 #
-# LCD Class for 6 wire / 4 bit control
+# Class for 6 wire / 4 bit control
+# of HD44780 based 16x2 LCD
 #
 # Ronald Diaz ronald@ronalddiaz.net
+# http://github.com/ronnied/
 #
-class Lcd:
+class HD44780:
   def __init__(self, gpio=None, rs=11, e=10, d4=6, d5=5, d6=4, d7=1, power=1):
-    self.rs = rs
-    self.e = e
-    self.d4 = d4
-    self.d5 = d5
-    self.d6 = d6
-    self.d7 = d7
+    # Hardware Pins
+    self.pin_rs = rs
+    self.pin_e = e
+    self.pin_d4 = d4
+    self.pin_d5 = d5
+    self.pin_d6 = d6
+    self.pin_d7 = d7
+    
+    # state
     self.power = power
     
     # Setup GPIO
@@ -24,20 +29,18 @@ class Lcd:
       self.gpio = gpio
 
     # LCD GPIO SETUP
-    self.LCD_E  = self.gpio.pinMode(self.e,  self.gpio.OUTPUT)
-    self.LCD_RS = self.gpio.pinMode(self.rs, self.gpio.OUTPUT)
-    self.LCD_D4 = self.gpio.pinMode(self.d4, self.gpio.OUTPUT)
-    self.LCD_D5 = self.gpio.pinMode(self.d5, self.gpio.OUTPUT)
-    self.LCD_D6 = self.gpio.pinMode(self.d6, self.gpio.OUTPUT)
-    self.LCD_D7 = self.gpio.pinMode(self.d7, self.gpio.OUTPUT)
+    self.E  = self.gpio.pinMode(self.pin_e,  self.gpio.OUTPUT)
+    self.RS = self.gpio.pinMode(self.pin_rs, self.gpio.OUTPUT)
+    self.D4 = self.gpio.pinMode(self.pin_d4, self.gpio.OUTPUT)
+    self.D5 = self.gpio.pinMode(self.pin_d5, self.gpio.OUTPUT)
+    self.D6 = self.gpio.pinMode(self.pin_d6, self.gpio.OUTPUT)
+    self.D7 = self.gpio.pinMode(self.pin_d7, self.gpio.OUTPUT)
 
     # Define some device constants
-    self.LCD_WIDTH = 16
-    self.LCD_CHR = True
-    self.LCD_CMD = False
+    self.width = 16
 
-    self.LCD_LINE_1 = 0x80 # LCD RAM address for the 1st line
-    self.LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line 
+    self.l1 = 0x80 # LCD RAM address for the 1st line
+    self.l2 = 0xC0 # LCD RAM address for the 2nd line 
 
     # Timing constants
     self.E_PULSE = 0.00005
@@ -47,95 +50,122 @@ class Lcd:
       self.on()
 
   def init(self):
-    self.lcd_byte(0x33, self.LCD_CMD)
-    self.lcd_byte(0x32, self.LCD_CMD)
-    self.lcd_byte(0x28, self.LCD_CMD)
-    self.lcd_byte(0x0C, self.LCD_CMD) 
-    self.lcd_byte(0x06, self.LCD_CMD)
-    self.lcd_byte(0x01, self.LCD_CMD)
+    self.cmd(0x33)
+    self.cmd(0x32)
+    self.cmd(0x28)
+    self.cmd(0x0C) 
+    self.cmd(0x06)
+    self.cmd(0x01)
 
   def on(self):
     # power the lcd / backlight
+    pass
     # wait...
     self.init()
-    time.sleep(0.25)
+    # wait...
+    sleep(0.5)
 
   def off(self):
+    # clear the screen
+    self.clear()
     # power off the lcd / backlight
     pass
+    
+  def clear(self):
+      self.message(" " * 16 + "\n" + " " * 16)
 
-  def home(self):
-    self.position(0, 0)
-
-  def position(self, x, y):
-    pass
-  
   # abstracted to allow change
-  def output(self, pin, data):
+  def out(self, pin, data):
     self.gpio.digitalWrite(pin, data)
-
-  def lcd_byte(self, bits, mode):
-    # Send byte to data pins
-    # bits = data
-    # mode = True  for character
-    #        False for command
-    self.output(self.rs, mode) # RS
-
-    # High bits
-    self.output(self.d4, False)
-    self.output(self.d5, False)
-    self.output(self.d6, False)
-    self.output(self.d7, False)
+  
+  # Send byte to data pins
+  # bits = data
+  # mode = True  for character
+  #        False for command
+  def byte(self, bits, mode):
+    self.out(self.pin_rs, mode)
+    self.highBits(bits)
+    self.toggleEnablePin()
+    self.lowBits(bits)
+    self.toggleEnablePin()
+  
+  def toggleEnablePin(self):
+    sleep(self.E_DELAY)    
+    self.out(self.pin_e, True)  
+    sleep(self.E_PULSE)
+    self.out(self.pin_e, False)  
+    sleep(self.E_DELAY) 
+    
+  def highBits(self, bits):
+    self.out(self.pin_d4, False)
+    self.out(self.pin_d5, False)
+    self.out(self.pin_d6, False)
+    self.out(self.pin_d7, False)
     if bits&0x10==0x10:
-      self.output(self.d4, True)
+      self.out(self.pin_d4, True)
     if bits&0x20==0x20:
-      self.output(self.d5, True)
+      self.out(self.pin_d5, True)
     if bits&0x40==0x40:
-      self.output(self.d6, True)
+      self.out(self.pin_d6, True)
     if bits&0x80==0x80:
-      self.output(self.d7, True)
-
-    # Toggle 'Enable' pin
-    time.sleep(self.E_DELAY)    
-    self.output(self.e, True)  
-    time.sleep(self.E_PULSE)
-    self.output(self.e, False)  
-    time.sleep(self.E_DELAY)      
-
-    # Low bits
-    self.output(self.d4, False)
-    self.output(self.d5, False)
-    self.output(self.d6, False)
-    self.output(self.d7, False)
+      self.out(self.pin_d7, True)
+    
+  def lowBits(self, bits):
+    self.out(self.pin_d4, False)
+    self.out(self.pin_d5, False)
+    self.out(self.pin_d6, False)
+    self.out(self.pin_d7, False)
     if bits&0x01==0x01:
-      self.output(self.d4, True)
+      self.out(self.pin_d4, True)
     if bits&0x02==0x02:
-      self.output(self.d5, True)
+      self.out(self.pin_d5, True)
     if bits&0x04==0x04:
-      self.output(self.d6, True)
+      self.out(self.pin_d6, True)
     if bits&0x08==0x08:
-      self.output(self.d7, True)
+      self.out(self.pin_d7, True)      
 
-    # Toggle 'Enable' pin
-    time.sleep(self.E_DELAY)    
-    self.output(self.e, True)  
-    time.sleep(self.E_PULSE)
-    self.output(self.e, False)  
-    time.sleep(self.E_DELAY)   
+  def cmd(self, bits):
+      self.byte(bits, False)
 
-  def sendString(self, message):
-    message = message.ljust(self.LCD_WIDTH," ")  
-    for i in range(self.LCD_WIDTH):
-      self.lcd_byte(ord(message[i]), self.LCD_CHR)
+  def chr(self, bits):
+      self.byte(bits, True)    
+    
+  def message(self, text):
+      #print text
+      # Auto left justify both lines      
+      msg = text.split("\n")      
+      msg[0] = msg[0].ljust(16, " ")
+      msg[1] = msg[1].ljust(16, " ")            
+      text = msg[0] + "\n" + msg[1]
+      #print text              
+      self.cmd(self.l1)
+      #print text
+      for char in text:
+          if char == '\n':
+              self.cmd(self.l2)
+          else:
+              self.chr(ord(char))
 
-  def line1(self, message):
-    self.lcd_byte(0x80, False)
-    self.sendString(message)
+#  def sendString(self, message):
+#    message = message.ljust(self.width," ")  
+#    for i in range(self.width):
+#      self.byte(ord(message[i]), self.chr)
+#
+#  def line1(self, message):
+#    self.byte(0x80, False)
+#    self.sendString(message)
+#
+#  def line2(self, message):
+#    self.byte(0xC0, False)
+#    self.sendString(message)
+#
+#  def lines(self, line1, line2):
+#    self.line1(line1)
+#    self.line2(line2)
 
-  def line2(self, message):
-    self.lcd_byte(0xC0, False)
-    self.sendString(message)
-
-  def lines(self, line1, line2):
-    self.line1(line1)
-    self.line2(line2)
+#if __name__ == '__main__':
+#
+#    lcd = HD44780()
+#    print lcd
+#    sleep(1)
+#    lcd.message("Raspberry Pi\n16x2 LCD 44780!")
