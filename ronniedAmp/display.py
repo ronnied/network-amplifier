@@ -307,12 +307,9 @@ class Display:
         #print "restoring: mp3"
         self.showMp3()
       elif self.state == self.STATE_MUTED:
-        # Error - we never restore a muted state
         #print "restoring: muted"
         self.muteOn()
    
-            
-#
 #    def updateSongPlaying(self, text):
 #      self.lcdLine1.setText(text)
 #      self.lcdLine1.startScroll()

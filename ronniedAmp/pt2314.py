@@ -12,18 +12,18 @@ class PT2314:
   def __init__(self):
     try:
       # open Linux device /dev/i2c-0
-      self.i2c = smbus.SMBus(0)
+      self.i2c = smbus.SMBus(1)
     except:
       pass
-    self.i2cAddress = 0x88    
+    self.i2cAddress = 0x44    
     self.volume = 0      # volume = minimum
     self.attenuationL = 0# (-x -> x ? )
     self.attenuationR = 0# (-x -> x ? )
     self.mute = True     # mute on
     self.loudness = True # loudness on
     self.channel = 0     # channel 0 selected [ 0 > 3 ]
-    self.bass = 0xF      # bass = 0
-    self.treble = 0XF    # treble = 0    
+    self.bass = 0x0F     # bass = 0
+    self.treble = 0x0F   # treble = 0    
     self._updateAll()    # Initialise all 
     
   # High Level Commands
@@ -68,15 +68,15 @@ class PT2314:
   # Low Level Commands
 
   def _updateVolume(self):
-    _sendByte(self.volume)
+    self._sendByte(self.volume)
     
   def _updateAttenuation(self):
     if self.mute == True:
-      _sendByte(0xDF)      
-      _sendByte(0xFF)
+      self._sendByte(0xDF)      
+      self._sendByte(0xFF)
     else:
-      _sendByte(0xC0 | self.attenuationL)
-      _sendByte(0xE0 | self.attenuationR)
+      self._sendByte(0xC0 | self.attenuationL)
+      self._sendByte(0xE0 | self.attenuationR)
     
   def _updateAudioSwitch(self):           
     audioByte = 0x58          # Audio Switch Byte 
@@ -85,7 +85,7 @@ class PT2314:
     else:
       audioByte |= 0x04    
     audioByte |= self.channel # Select Channel
-    self._sendbyte(audioByte) # Send Byte
+    self._sendByte(audioByte) # Send Byte
 
   def _updateBass(self):
     self._sendByte(0x60 | self.bass)
@@ -101,5 +101,11 @@ class PT2314:
     self._updateTreble()
     
   def _sendByte(self, b):
-    self.i2c.write_byte(self. address, b) # send data via i2c    
-    time.sleep(0.1)
+    #print "%x" % b
+    try:
+      self.i2c.write_byte(self.i2cAddress, b) # send data via i2c    
+    except:
+      #print "exception"
+      pass
+ 
+
