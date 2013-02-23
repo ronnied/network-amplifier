@@ -20,7 +20,7 @@ class ControllerServer(Resource):
   input.start()
   
   def render_GET(self, request):      
-    request.setHeader("content-type", "text/plain")
+    request.setHeader("content-type", "application/json")
     return self.translateGET(request)
 
   def translateGET(self, get):
@@ -79,14 +79,23 @@ class ControllerServer(Resource):
     #            
     else:
       error = "Unknown command: " + str(sw)
-      print error
+      #print error
       return error
 
   ########################################################  
   # Delegate incoming get    
   def routeGet(self, seg):
-    msg = "not implemented"
-    print msg
-    return msg
+    # command to switch
+    sw = seg[2]
+    #print sw
+    
+    # High level commands
+    #
+    if sw == "all":
+      return self.controller.getAll()       
+    else:
+      msg = "not implemented"
+      #print msg
+      return msg
 
 
