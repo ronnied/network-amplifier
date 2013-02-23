@@ -256,7 +256,7 @@ class Display:
       # scroll song playing in line 1
       # show time remaining in line 2
       self.sTextLine1.setText("      Mp3")      
-      self.sTextLine2.setText("Total time remaining: 3m 08s")
+      self.sTextLine2.setText("")
     
     def updateWelcomeStateBuffers(self):
       self.sTextLine1.setText("Master " + chr(246) + " Control")

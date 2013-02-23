@@ -47,13 +47,13 @@ class Controller():
     #
     # Amplifier States
     #
-    self.muteState = True    
+    self.muteState = False    
     self.powerState = False
     self.selectState = False
     
     # Volume 0->100
-    self.volume = 0
-    self.volumei2c = 0x10
+    self.volume = 50
+    self.volumei2c = 0x20
 
     # Display Client Resource Threaded
     self.display = Display.Worker()

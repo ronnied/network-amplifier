@@ -16,10 +16,10 @@ class PT2314:
     except:
       pass
     self.i2cAddress = 0x44    
-    self.volume = 0      # volume = minimum
+    self.volume = 0x20   # volume = minimum
     self.attenuationL = 0# (-x -> x ? )
     self.attenuationR = 0# (-x -> x ? )
-    self.mute = True     # mute on
+    self.mute = False    # mute on
     self.loudness = True # loudness on
     self.channel = 0     # channel 0 selected [ 0 > 3 ]
     self.bass = 0x0F     # bass = 0
@@ -101,11 +101,9 @@ class PT2314:
     self._updateTreble()
     
   def _sendByte(self, b):
-    #print "%x" % b
+    print "data: %x" % b
     try:
       self.i2c.write_byte(self.i2cAddress, b) # send data via i2c    
     except:
       #print "exception"
       pass
- 
-
