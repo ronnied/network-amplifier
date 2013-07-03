@@ -105,7 +105,7 @@ class PT2314:
       else:
         return next(x for x in self.toneValues if x[0] == value)[1]
     except StopIteration:
-      return 0
+      return 0x0F
     
   def _updateAll(self):    
     self._updateVolume()
