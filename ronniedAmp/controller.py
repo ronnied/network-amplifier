@@ -56,6 +56,10 @@ class Controller():
     self.volume = 50
     self.volumei2c = 0x20
 
+    # Tone
+    self.bass = 0
+    self.treble = 0
+
     # Display Client Resource Threaded
     self.display = Display.Worker()
     self.display.start()
