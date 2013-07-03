@@ -63,12 +63,12 @@ class PT2314:
   def setBass(self, bass):
     self.bass = self._lookupTone(int(bass))
     self._updateBass()
-    return self._lookupTone(self.bass, True)
+    return self._lookupToneReverse(self.bass)
 
   def setTreble(self, treble):
     self.treble = self._lookupTone(int(treble))
     self._updateTreble()
-    return self._lookupTone(self.treble, True)
+    return self._lookupToneReverse(self.treble)
 
   # Low Level Commands
 
@@ -98,15 +98,18 @@ class PT2314:
   def _updateTreble(self):
     self._sendByte(0x70 | self.treble)
 
-  def _lookupTone(self, value, reverse = False):
+  def _lookupTone(self, value):
     try:
-      if(reverse):
-        return next(x for x in self.toneValues if x[1] == value)[0]
-      else:
         return next(x for x in self.toneValues if x[0] == value)[1]
     except StopIteration:
       return 0x0F
-    
+  
+  def _lookupToneReverse(self, value):
+    try:
+        return next(x for x in self.toneValues if x[1] == value)[0]
+    except StopIteration:
+      return 0
+
   def _updateAll(self):    
     self._updateVolume()
     self._updateAttenuation()

@@ -20,7 +20,7 @@ class ControllerServer(Resource):
   input.start()
   
   def render_GET(self, request):      
-    request.setHeader("content-type", "text/plain")
+    request.setHeader("content-type", "application/json")
     return self.translateGET(request)
 
   def translateGET(self, get):
@@ -74,19 +74,42 @@ class ControllerServer(Resource):
       return self.controller.powerOn()
     elif sw == "powerOff":
       return self.controller.powerOff()
-      
+    elif sw == "bass":
+      bass = 0
+      try:
+        bass = seg[3]
+      except ValueError:
+        bass = 0
+      return self.controller.bassSet(bass)
+    elif sw == "treble":
+      treble = 0
+      try:
+        treble = seg[3]
+      except ValueError:
+        treble = 0
+      return self.controller.trebleSet(treble)
+
     # Granular commands
     #            
     else:
       error = "Unknown command: " + str(sw)
-      print error
+      #print error
       return error
 
   ########################################################  
   # Delegate incoming get    
   def routeGet(self, seg):
-    msg = "not implemented"
-    print msg
-    return msg
+    # command to switch
+    sw = seg[2]
+    #print sw
+    
+    # High level commands
+    #
+    if sw == "all":
+      return self.controller.getAll()       
+    else:
+      msg = "not implemented"
+      #print msg
+      return msg
 
 

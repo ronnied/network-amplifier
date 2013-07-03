@@ -1,6 +1,7 @@
 from ronniedAmp.display import Display
 from ronniedAmp.pt2314 import PT2314
 from time import sleep
+import json
 
 # Amplifier Controller
 #
@@ -55,6 +56,10 @@ class Controller():
     self.volume = 50
     self.volumei2c = 0x20
 
+    # Tone
+    self.bass = 0
+    self.treble = 0
+
     # Display Client Resource Threaded
     self.display = Display.Worker()
     self.display.start()
@@ -66,11 +71,16 @@ class Controller():
     # i2c Resource
     self.i2c = PT2314()
   
+  # json formatted ok response
+  def ok(self, status = "ok"):
+    data = {"result" : True, "status" : status}
+    return json.dumps(data)
+  
   # Power On
   #
   def powerOn(self):
     if self.powerState == True:            
-      return "ok. Power already on."   
+      return self.ok("ok. Power already on.")   
     self.powerState = True
     #self.i2c.powerOn()    
     self.volumeSet(50)
@@ -81,38 +91,38 @@ class Controller():
     self.selectMedia()
     #self.i2c.selectChannel(0)   
     self.i2c.setAttenuation(0,0) 
-    self.i2c.setBass()
-    self.i2c.setTreble()
+    self.i2c.setBass(0)
+    self.i2c.setTreble(0)
     self.display.powerOn()
-    return "ok"
+    return self.ok()
 
   # Power Off
   #
   def powerOff(self):
     if self.powerState == False:            
-      return "ok. Power already off."      
+      return self.ok("Power already off.")      
     self.powerState = False
     #self.i2c.powerOff()
     self.display.powerOff()
-    return "ok"
+    return self.ok()
 
   # Select Audio Input [ Media | MP3 ]
   #
   def selectMedia(self):
     if self.selectState == False:
-      return "ok. Media already selected."
+      return self.ok("ok. Media already selected.")
     self.i2c.selectChannel(0)
     self.display.showMedia()
     self.selectState = False
-    return "ok"    
+    return self.ok()    
 
   def selectMp3(self):
     if self.selectState == True:              
-      return "ok. Mp3 already selected."
+      return self.ok("ok. Mp3 already selected.")
     self.i2c.selectChannel(1)
     self.display.showMp3()    
     self.selectState = True
-    return "ok"    
+    return self.ok()   
 
   def selectToggle(self):
     #print "select toggle: currently: " + str(self.selectState)
@@ -122,7 +132,7 @@ class Controller():
     else:
       self.i2c.selectChannel(0)
       self.selectMedia()    
-    return "ok"        
+    return self.ok()       
 
   def muteOn(self):
     if self.muteState == True:
@@ -131,16 +141,16 @@ class Controller():
     self.i2c.muteOn()
     self.display.muteOn()    
     self.muteState = True
-    return "ok"    
+    return self.ok()
 
   def muteOff(self):
     if self.muteState == False:
-      return "ok. Mute already off."      
+      return self.ok("ok. Mute already off.")      
     #self.relay.muteOff()
     self.i2c.muteOff()
     self.display.muteOff()    
     self.muteState = False
-    return "ok"    
+    return self.ok()
 
   def muteToggle(self):
     #print "mute toggle: currently: " + str(self.muteState)
@@ -148,7 +158,7 @@ class Controller():
       self.muteOn()
     else:
       self.muteOff()
-    return "ok"
+    return self.ok()
 
   # Volume Methods
   #
@@ -156,29 +166,29 @@ class Controller():
     self.volume = self.volumeValidate(self.volume + 1)
     self.i2c.setVolume(self.volumei2c)
     self.display.volumeSetLcd(self.volume)
-    return "ok"    
+    return self.ok()
 
   def volumeDown(self):
     self.volume = self.volumeValidate(self.volume - 1)
     self.i2c.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return "ok"    
+    return self.ok() 
 
   def volumeDelta(self, delta=0):
     if delta == 0:
-      return "ok. no change"
+      return self.ok("ok. no change")
     delta = int(delta)
     self.volume = int(self.volumeValidate(int(self.volume) + (delta / 2)))    
     self.i2c.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return "ok"
+    return self.ok()
 
   def volumeSet(self, volume):
     self.volume = self.volumeValidate(volume)
     #print "controller:volume:" + str(self.volume)
     self.i2c.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return "ok"    
+    return self.ok()   
       
   def volumeValidate(self, vol):
     #print "controller:volumeValidate:" + str(vol)
@@ -194,6 +204,27 @@ class Controller():
     self.volumei2c = int(0x3F - float((float(63)/float(100) * float(vol))))
     return vol
 
+  # Tone Methods
+  #
+  def bassSet(self, bass):
+    self.bass = self.i2c.setBass(bass)
+    #self.display.bassSetLcd(self.bass)
+    return self.ok()
+
+  def trebleSet(self, treble):
+    self.treble = self.i2c.setTreble(treble)
+    #self.display.trebleSetLcd(self.treble)
+    return self.ok()
+
   # Getters
   def volumeGet(self):
     return self.volume
+
+  def getAll(self):
+    data = {'power' : self.powerState,
+             'volume' : self.volume,
+             'mute' : self.muteState,
+             'select' : self.selectState,
+             'bass': self.bass,
+             'treble': self.treble}
+    return json.dumps(data)    
