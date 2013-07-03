@@ -87,8 +87,8 @@ class Controller():
     self.selectMedia()
     #self.i2c.selectChannel(0)   
     self.i2c.setAttenuation(0,0) 
-    self.i2c.setBass()
-    self.i2c.setTreble()
+    self.i2c.setBass(0)
+    self.i2c.setTreble(0)
     self.display.powerOn()
     return self.ok()
 
@@ -200,6 +200,18 @@ class Controller():
     self.volumei2c = int(0x3F - float((float(63)/float(100) * float(vol))))
     return vol
 
+  # Tone Methods
+  #
+  def bassSet(self, bass):
+    self.bass = self.i2c.setBass(bass)
+    //self.display.bassSetLcd(self.bass)
+    return self.ok()
+
+  def trebleSet(self, treble):
+    self.treble = self.i2c.setTreble(treble)
+    //self.display.trebleSetLcd(self.treble)
+    return self.ok()
+
   # Getters
   def volumeGet(self):
     return self.volume
@@ -208,5 +220,7 @@ class Controller():
     data = {'power' : self.powerState,
              'volume' : self.volume,
              'mute' : self.muteState,
-             'select' : self.selectState}
+             'select' : self.selectState,
+             'bass': self.bass,
+             'treble': self.treble}
     return json.dumps(data)    

@@ -24,8 +24,27 @@ class PT2314:
     self.channel = 0     # channel 0 selected [ 0 > 3 ]
     self.bass = 0x0F     # bass = 0
     self.treble = 0x0F   # treble = 0    
-    self._updateAll()    # Initialise all 
-    
+    self._updateAll()    # Initialise all
+
+    # Tone lookup 
+    self.toneValues = list[
+      (-14, 0x00),
+      (-12, 0x01),
+      (-10, 0x02),
+       (-8, 0x03),
+       (-6, 0x04),
+       (-4, 0x05),
+       (-2, 0x06),
+        (0, 0x07),
+        (2, 0x0E),
+        (4, 0x0D),
+        (6, 0x0C),
+        (8, 0x0B),
+       (10, 0x0A),
+       (12, 0x09),
+       (14, 0x08),
+      ]
+   
   # High Level Commands
 
   def setVolume(self, volume):
@@ -58,12 +77,14 @@ class PT2314:
     self._updateAttenuation()
     
   def setBass(self, bass):
-    self.bass = bass
+    self.bass = self._lookupBass(bass)
     self._updateBass()
+    return self.bass
 
   def setTreble(self, treble):
-    self.treble = treble
+    self.treble = self._lookupTreble(treble)
     self._updateTreble()
+    return self.treble
 
   # Low Level Commands
 
@@ -91,7 +112,13 @@ class PT2314:
     self._sendByte(0x60 | self.bass)
 
   def _updateTreble(self):
-    self._sendByte(0x70 | self.bass)
+    self._sendByte(0x70 | self.treble)
+
+  def _lookupTone(self):
+    try:
+      return next(x for x in self.toneValues if value in x)
+    except StopIteration:
+      return 0
     
   def _updateAll(self):    
     self._updateVolume()

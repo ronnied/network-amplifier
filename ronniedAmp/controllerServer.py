@@ -74,7 +74,21 @@ class ControllerServer(Resource):
       return self.controller.powerOn()
     elif sw == "powerOff":
       return self.controller.powerOff()
-      
+    elif sw == "bass":
+      bass = 0
+      try:
+        bass = seg[3]
+      except ValueError:
+        bass = 0
+      return self.controller.bassSet(bass)
+    elif sw == "treble":
+      treble = 0
+      try:
+        treble = seg[3]
+      except ValueError:
+        treble = 0
+      return self.controller.trebleSet(treble)
+
     # Granular commands
     #            
     else:
