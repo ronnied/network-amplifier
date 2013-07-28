@@ -26,7 +26,7 @@ class ControllerServer(Resource):
   def translateGET(self, get):
     path = (get.__dict__)["path"]
     seg = path.split("/")
-    print seg #print seg[1]
+    #print seg #print seg[1]
     if seg[1] == "set":
       return self.routeSet(seg) 
     elif seg[1] == "get":

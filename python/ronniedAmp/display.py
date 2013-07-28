@@ -1,6 +1,7 @@
 from ronniedAmp.lcd import HD44780
 from ronniedAmp.led import Led
 from ronniedAmp.volume import Volume
+from ronniedAmp.tone import Tone
 from ronniedAmp.timer import Timer
 from ronniedAmp.scrollingText import ScrollingText
 #import logging
@@ -31,6 +32,9 @@ class Display:
 
     # Volume
     self.vol = Volume()
+
+    # Tone
+    self.tone = Tone()
     
     # Selected Input
     self.selectedInput = True # media = True, mp3 = False
@@ -76,14 +80,15 @@ class Display:
       self.STATE_MP3        = 2 #
       self.STATE_MUTED      = 3 #
       self.STATE_VOLUME     = 4 #
-      #self.STATE_MANUAL     = 5
+      self.STATE_TONE       = 5 #
             
       # Timers
       #
       self.volumeTimer = Timer(1, False)
+      self.toneTimer = Timer(1, False)
       self.selectLedTimer = Timer(0.25, False)
       self.welcomeTimer = Timer(3, False)
-      self.MAIN_THREAD_DELAY = 0.05
+      self.MAIN_THREAD_DELAY = 0.01
       
       self.state = self.STATE_WELCOME
       self.prevState = self.STATE_WELCOME
@@ -117,6 +122,16 @@ class Display:
             self.volumeTimer.stop()
             self.restorePreviousState()            
           
+        elif self.state == self.STATE_TONE:
+          # update the tone line buffers
+          self.updateToneStateBuffers()
+          
+          # is the tone display lingering timer on and has it expired?
+          if self.toneTimer.isOn() == True and self.toneTimer.elapsed() == True:
+            #print "Tone Lingering timer elapsed!"
+            self.toneTimer.stop()
+            self.restorePreviousState()            
+
         elif self.state == self.STATE_MEDIA:
           self.updateMediaStateBuffers()
           
@@ -194,15 +209,29 @@ class Display:
       #print "showVolume"
       self.stopAllTimers()
       self.volumeTimer.start()
-      # Set the state (as long as it's not the volume state)
-      if self.state != self.STATE_VOLUME:
+      # Set the previous state (as long as it's not the volume or tone state)
+      if self.state != self.STATE_VOLUME and self.state != self.STATE_TONE:
         self.prevState = self.state
       # now set the current state to volume
       self.state = self.STATE_VOLUME 
       
+    def showTone(self):
+      #print "showTone"
+      self.stopAllTimers()
+      self.toneTimer.start()
+      # Set the previous state (as long as it's not the tone or volume state)
+      if self.state != self.STATE_TONE and self.state != self.STATE_VOLUME:
+        self.prevState = self.state
+      # now set the current state to tone
+      self.state = self.STATE_TONE 
+    
     def setVolume(self, vol):
       self.disp.vol.set(vol)
       self.showVolume()
+
+    def setTone(self, bass, treble):
+      self.disp.tone.set(bass, treble)
+      self.showTone()
 
     def showMedia(self):
       self.stopAllTimers()
@@ -246,6 +275,12 @@ class Display:
       self.sTextLine1.setText(line1)
       self.sTextLine2.setText(line2)
     
+    def updateToneStateBuffers(self):
+      line1 = self.disp.tone.hashBass()
+      line2 = self.disp.tone.hashTreble()          
+      self.sTextLine1.setText(line1)
+      self.sTextLine2.setText(line2)
+
     def updateMediaStateBuffers(self):
       # Showing static text on Line 1
       self.sTextLine1.setText("     Media")          

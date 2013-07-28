@@ -208,12 +208,12 @@ class Controller():
   #
   def bassSet(self, bass):
     self.bass = self.i2c.setBass(bass)
-    #self.display.bassSetLcd(self.bass)
+    self.display.setTone(self.bass, self.treble)
     return self.ok()
 
   def trebleSet(self, treble):
     self.treble = self.i2c.setTreble(treble)
-    #self.display.trebleSetLcd(self.treble)
+    self.display.setTone(self.bass, self.treble)
     return self.ok()
 
   # Getters
