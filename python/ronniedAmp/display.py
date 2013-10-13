@@ -1,4 +1,4 @@
-from ronniedAmp.lcd import HD44780
+from ronniedAmp.lcd595 import HD44780_595
 from ronniedAmp.led import Led
 from ronniedAmp.volume import Volume
 from ronniedAmp.tone import Tone
@@ -24,7 +24,7 @@ class Display:
       gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_PINS)
 
     # Create resource to control HD44780 16x2 LCD
-    self.lcd = HD44780(gpio)    
+    self.lcd = HD44780_595(gpio)    
    
     # Create resources to control leds
     self.sLed = Led(3, 0, gpio)

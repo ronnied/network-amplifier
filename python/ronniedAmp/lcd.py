@@ -11,24 +11,21 @@ from time import sleep
 #
 class HD44780:
   def __init__(self, gpio=None, rs=11, e=10, d4=6, d5=5, d6=4, d7=1, power=1):
-    # Hardware Pins
-    self.pin_rs = rs
-    self.pin_e = e
-    self.pin_d4 = d4
-    self.pin_d5 = d5
-    self.pin_d6 = d6
-    self.pin_d7 = d7
-    
-    # state
+    self.initConstants()
+    self.initGpio(gpio, rs, e, d4, d5, d6, d7)
+    self.initPower(power)
+
+  def initPower(self, power):
     self.power = power
-    
-    # Setup GPIO
+    if self.power == 1:
+      self.on()  
+
+  def initGpio(self, gpio, rs=11, e=10, d4=6, d5=5, d6=4, d7=1):
     if gpio == None:
       self.gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_PINS)
     else:
-      self.gpio = gpio
-
-    # LCD GPIO SETUP
+      self.gpio = gpio      
+    # LCD Pins
     self.E  = self.gpio.pinMode(self.pin_e,  self.gpio.OUTPUT)
     self.RS = self.gpio.pinMode(self.pin_rs, self.gpio.OUTPUT)
     self.D4 = self.gpio.pinMode(self.pin_d4, self.gpio.OUTPUT)
@@ -36,18 +33,12 @@ class HD44780:
     self.D6 = self.gpio.pinMode(self.pin_d6, self.gpio.OUTPUT)
     self.D7 = self.gpio.pinMode(self.pin_d7, self.gpio.OUTPUT)
 
-    # Define some device constants
-    self.width = 16
-
+  def initConstants(self):
+    self.width = 16 # LCD Width
     self.l1 = 0x80 # LCD RAM address for the 1st line
-    self.l2 = 0xC0 # LCD RAM address for the 2nd line 
-
-    # Timing constants
-    self.E_PULSE = 0.00005
-    self.E_DELAY = 0.00005
-
-    if self.power == 1:
-      self.on()
+    self.l2 = 0xC0 # LCD RAM address for the 2nd line
+    self.E_PULSE = 0.00005 # Timing
+    self.E_DELAY = 0.00005 # Timing
 
   def init(self):
     self.cmd(0x33)
