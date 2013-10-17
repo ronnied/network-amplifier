@@ -12,6 +12,13 @@ from time import sleep
 # http://github.com/ronnied/
 #
 class HD44780_595(HD44780) :
+
+  # Overriden as the delays are now removed
+  def initConstants(self):
+    HD44780.initConstants(self)
+    self.E_PULSE = 0
+    self.E_DELAY = 0
+
   # Overriden to provide shift reg intercept
   def initGpio(self, gpio, a, b, c, d, e, f):
     if gpio == None:
@@ -20,9 +27,9 @@ class HD44780_595(HD44780) :
       self.gpio = gpio
 
     # Setup ShiftReg
-    self.pin_s_clock = 5
-    self.pin_s_data = 0
-    self.pin_s_latch = 3
+    self.pin_s_clock = 1
+    self.pin_s_data = 6
+    self.pin_s_latch = 5
     self.sRegBase = 100
     self.sRegPins = 6
     self.sReg = wiringpi2.sr595Setup(self.sRegBase, self.sRegPins, self.pin_s_data, self.pin_s_clock, self.pin_s_latch)
@@ -41,7 +48,7 @@ class HD44780_595(HD44780) :
     self.pin_d7 = self.sRegBase + 4 # d7
     
 # if __name__ == '__main__':
-#     lcd = HD44780_595()
-#     print lcd
-#     sleep(1)
-#     lcd.message("Raspberry Pi\n16x2 LCD 44780!")
+#      lcd = HD44780_595()
+#      print lcd
+#      sleep(1)
+#      lcd.message("Raspberry Pi\n16x2 LCD 44780!")

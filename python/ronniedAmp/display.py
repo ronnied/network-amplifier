@@ -24,7 +24,7 @@ class Display:
       gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_PINS)
 
     # Create resource to control HD44780 16x2 LCD
-    self.lcd = HD44780_595(gpio)    
+    self.lcd = HD44780_595()    
    
     # Create resources to control leds
     self.sLed = Led(3, 0, gpio)
@@ -295,7 +295,7 @@ class Display:
     
     def updateWelcomeStateBuffers(self):
       self.sTextLine1.setText("Master " + chr(246) + " Control")
-      self.sTextLine2.setText("v0.1 Ronald Diaz")         
+      self.sTextLine2.setText("v0.3 Ronald Diaz")         
                 
     ####################
     # UPDATE LCD DISPLAY        
