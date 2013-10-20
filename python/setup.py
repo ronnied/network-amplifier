@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='ronniedAmp',
-      version='1.0',
+      version='1.3',
       description='Python library for interfacing custom network (i2c controlled) amplifier',
       author='Ronald Diaz',
       author_email='ronald@ronalddiaz.net',
