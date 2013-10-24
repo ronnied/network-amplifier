@@ -12,7 +12,7 @@ class PT2314:
   def __init__(self):
     try:
       # open Linux device /dev/i2c-0
-      self.i2c = smbus.SMBus(1)
+      self.i2c = smbus.SMBus(0)
     except:
       pass
     self.i2cAddress = 0x44    
@@ -118,7 +118,7 @@ class PT2314:
     self._updateTreble()
     
   def _sendByte(self, b):
-    #print "data: %x" % b
+    print "data: %x" % b
     try:
       self.i2c.write_byte(self.i2cAddress, b) # send data via i2c    
     except:

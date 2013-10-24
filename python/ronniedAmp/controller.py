@@ -1,5 +1,7 @@
 from ronniedAmp.display import Display
 from ronniedAmp.pt2314 import PT2314
+from ronniedAmp.i2c import I2cInit
+from ronniedAmp.radio import Radio
 from time import sleep
 import json
 
@@ -9,7 +11,8 @@ import json
 #
 # web server -> incoming
 # display server <- outgoing
-# i2cAmplifier <- outgoing (todo)
+# i2cAmplifier <- outgoing
+# i2cRadio <- outgoing
 # relay module <- outgoing (todo)
 #
 # Ronald Diaz 2013
@@ -25,13 +28,15 @@ import json
 #       -> MuteToggle
 #       -> SelectMedia
 #       -> SelectMp3
+#       -> SelectRadio
 #       -> SelectToggle
 #       -> VolumeUp
 #       -> VolumeDown
 #       -> VolumeSet(0 -> 100)
 #       -> VolumeDelta(-x -> x)
 #
-# Status Messages (todo)
+# Status Message
+#  # describe status message here
 #
 # getVolume
 # getMuteState
@@ -42,7 +47,11 @@ import json
 # getSong
 # getSongTimeRemain
 # getSongTimeTotal
-# 
+#
+# Radio Commands (todo)
+# switch station
+# get rdbs
+#
 class Controller():
   def __init__(self):
     #
@@ -50,7 +59,7 @@ class Controller():
     #
     self.muteState = False    
     self.powerState = False
-    self.selectState = False
+    self.selectState = 0 # 0 -> 2    
     
     # Volume 0->100
     self.volume = 50
@@ -67,9 +76,15 @@ class Controller():
     
     # Relay Resource
     self.relay = None
+
+    # reset i2c ports
+    self.i = I2cInit()
     
-    # i2c Resource
-    self.i2c = PT2314()
+    # i2c PT2314 Resource
+    self.audio = PT2314()
+
+    # i2c Radio Resource
+    self.radio = Radio()
   
   # json formatted ok response
   def ok(self, status = "ok"):
@@ -82,17 +97,17 @@ class Controller():
     if self.powerState == True:            
       return self.ok("ok. Power already on.")   
     self.powerState = True
-    #self.i2c.powerOn()    
+    #self.audio.powerOn()    
     self.volumeSet(50)
-    #self.i2c.setVolume(0x10)
-    self.i2c.loudnessOn()
+    #self.audio.setVolume(0x10)
+    self.audio.loudnessOn()
     self.muteOff()
-    #self.i2c.muteOff()
+    #self.audio.muteOff()
     self.selectMedia()
-    #self.i2c.selectChannel(0)   
-    self.i2c.setAttenuation(0,0) 
-    self.i2c.setBass(0)
-    self.i2c.setTreble(0)
+    #self.audio.selectChannel(0)   
+    self.audio.setAttenuation(0,0) 
+    self.audio.setBass(0)
+    self.audio.setTreble(0)
     self.display.powerOn()
     return self.ok()
 
@@ -102,43 +117,70 @@ class Controller():
     if self.powerState == False:            
       return self.ok("Power already off.")      
     self.powerState = False
-    #self.i2c.powerOff()
+    #self.audio.powerOff()
     self.display.powerOff()
     return self.ok()
 
   # Select Audio Input [ Media | MP3 ]
   #
   def selectMedia(self):
-    if self.selectState == False:
-      return self.ok("ok. Media already selected.")
-    self.i2c.selectChannel(0)
+    #if self.selectState == False:
+    #  return self.ok("ok. Media already selected.")
+    self.audio.selectChannel(0)
     self.display.showMedia()
-    self.selectState = False
-    return self.ok()    
+    self.selectState = 0
+    return self.ok()
 
   def selectMp3(self):
-    if self.selectState == True:              
+    if self.selectState == 1:
       return self.ok("ok. Mp3 already selected.")
-    self.i2c.selectChannel(1)
-    self.display.showMp3()    
-    self.selectState = True
-    return self.ok()   
+    self.audio.selectChannel(1)
+    self.display.showMp3()
+    self.selectState = 1
+    return self.ok()
+
+  def selectRadio(self):
+    if self.selectState == 2:
+      return self.ok("ok. Radio already selected.")
+    self.audio.selectChannel(2) # route audio input
+    #self.display.showRadio()    
+    self.selectState = 2
+    return self.ok()
+
+  def selectAux(self):
+    if self.selectState == 3:              
+      return self.ok("ok. Aux already selected.")
+    self.audio.selectChannel(3) # route audio input
+    #self.display.showAux()
+    self.selectState = 3
+    return self.ok()
 
   def selectToggle(self):
-    #print "select toggle: currently: " + str(self.selectState)
-    if self.selectState == False:
-      self.i2c.selectChannel(1)
+    # toggle through states
+    self.selectState = self.selectState + 1
+    # upper limit
+    if self.selectState > 3:
+      self.selectState = 0
+    # switch states
+    if self.selectState == 0:
+      self.audio.selectChannel(0)
+      self.selectMedia()
+    elif self.selectState == 1:
+      self.audio.selectChannel(1)
       self.selectMp3()
-    else:
-      self.i2c.selectChannel(0)
-      self.selectMedia()    
-    return self.ok()       
+    elif self.selectState == 2:
+      self.audio.selectChannel(2)
+      self.selectRadio()
+    elif self.selectState == 3:
+      self.audio.selectChannel(3)
+      self.selectAux()
+    return self.ok()
 
   def muteOn(self):
     if self.muteState == True:
       return "ok. Already muted."
     #self.relay.muteOn()
-    self.i2c.muteOn()
+    self.audio.muteOn()
     self.display.muteOn()    
     self.muteState = True
     return self.ok()
@@ -147,7 +189,7 @@ class Controller():
     if self.muteState == False:
       return self.ok("ok. Mute already off.")      
     #self.relay.muteOff()
-    self.i2c.muteOff()
+    self.audio.muteOff()
     self.display.muteOff()    
     self.muteState = False
     return self.ok()
@@ -164,13 +206,13 @@ class Controller():
   #
   def volumeUp(self):
     self.volume = self.volumeValidate(self.volume + 1)
-    self.i2c.setVolume(self.volumei2c)
+    self.audio.setVolume(self.volumei2c)
     self.display.volumeSetLcd(self.volume)
     return self.ok()
 
   def volumeDown(self):
     self.volume = self.volumeValidate(self.volume - 1)
-    self.i2c.setVolume(self.volumei2c)
+    self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
     return self.ok() 
 
@@ -179,14 +221,14 @@ class Controller():
       return self.ok("ok. no change")
     delta = int(delta)
     self.volume = int(self.volumeValidate(int(self.volume) + (delta / 2)))    
-    self.i2c.setVolume(self.volumei2c)
+    self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
     return self.ok()
 
   def volumeSet(self, volume):
     self.volume = self.volumeValidate(volume)
     #print "controller:volume:" + str(self.volume)
-    self.i2c.setVolume(self.volumei2c)
+    self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
     return self.ok()   
       
@@ -200,19 +242,19 @@ class Controller():
     if vol>100:
       vol=100
     #print "controller:volumeValidate:post:" + str(vol)
-    # calculate i2c volume
+    # calculate audio i2c volume
     self.volumei2c = int(0x3F - float((float(63)/float(100) * float(vol))))
     return vol
 
   # Tone Methods
   #
   def bassSet(self, bass):
-    self.bass = self.i2c.setBass(bass)
+    self.bass = self.audio.setBass(bass)
     self.display.setTone(self.bass, self.treble)
     return self.ok()
 
   def trebleSet(self, treble):
-    self.treble = self.i2c.setTreble(treble)
+    self.treble = self.audio.setTreble(treble)
     self.display.setTone(self.bass, self.treble)
     return self.ok()
 

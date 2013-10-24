@@ -9,6 +9,9 @@ import threading
 import wiringpi
 import time
 
+def enum(**enums):
+    return type('Enum', (), enums)
+
 ######################################
 #
 # Display Class for controlling LCD
@@ -75,13 +78,8 @@ class Display:
       # Volume change state
       # --> Volume Lingering state
       #    --> Back to current state
-      self.STATE_WELCOME    = 0 #
-      self.STATE_MEDIA      = 1 #
-      self.STATE_MP3        = 2 #
-      self.STATE_MUTED      = 3 #
-      self.STATE_VOLUME     = 4 #
-      self.STATE_TONE       = 5 #
-            
+      self.states = enum(STATE_WELCOME = 0, STATE_MEDIA = 1, STATE_MP3 = 2, STATE_RADIO = 3, STATE_AUX = 4,  STATE_MUTED = 5, STATE_VOLUME = 6, STATE_TONE = 7)
+
       # Timers
       #
       self.volumeTimer = Timer(1, False)
@@ -90,9 +88,9 @@ class Display:
       self.welcomeTimer = Timer(3, False)
       self.MAIN_THREAD_DELAY = 0.01
       
-      self.state = self.STATE_WELCOME
-      self.prevState = self.STATE_WELCOME
-      self.lastMenu = self.STATE_MEDIA
+      self.state = self.states.STATE_WELCOME
+      self.prevState = self.states.STATE_WELCOME
+      self.lastMenu = self.states.STATE_MEDIA
       self.powerOn()
 
     ################################################
@@ -103,16 +101,16 @@ class Display:
       line1PrevBuffer = ""
       line2PrevBuffer = ""
       
-      while True:         
+      while True:
         #########################
         # DETERMINE MACHINE STATE
         #
         # Muted Blinking state on?
-        if self.state == self.STATE_MUTED:          
+        if self.state == self.states.STATE_MUTED:
           # update the (blinking) line buffers
-          self.updateMuteStateBuffers()          
+          self.updateMuteStateBuffers()
           
-        elif self.state == self.STATE_VOLUME:
+        elif self.state == self.states.STATE_VOLUME:
           # update the volume line buffers
           self.updateVolumeStateBuffers()
           
@@ -120,9 +118,9 @@ class Display:
           if self.volumeTimer.isOn() == True and self.volumeTimer.elapsed() == True:
             #print "Volume Lingering timer elapsed!"
             self.volumeTimer.stop()
-            self.restorePreviousState()            
+            self.restorePreviousState()
           
-        elif self.state == self.STATE_TONE:
+        elif self.state == self.states.STATE_TONE:
           # update the tone line buffers
           self.updateToneStateBuffers()
           
@@ -130,15 +128,21 @@ class Display:
           if self.toneTimer.isOn() == True and self.toneTimer.elapsed() == True:
             #print "Tone Lingering timer elapsed!"
             self.toneTimer.stop()
-            self.restorePreviousState()            
+            self.restorePreviousState()
 
-        elif self.state == self.STATE_MEDIA:
+        elif self.state == self.states.STATE_MEDIA:
           self.updateMediaStateBuffers()
           
-        elif self.state == self.STATE_MP3:
+        elif self.state == self.states.STATE_MP3:
           self.updateMp3StateBuffers()
+
+        elif self.state == self.states.STATE_RADIO:
+          self.updateRadioStateBuffers()
+
+        elif self.state == self.states.STATE_AUX:
+          self.updateAuxStateBuffers()          
           
-        elif self.state == self.STATE_WELCOME:
+        elif self.state == self.states.STATE_WELCOME:
           self.updateWelcomeStateBuffers()
           
           # is the welcome timer on and has it expired?
@@ -172,8 +176,8 @@ class Display:
     #
     def powerOn(self):
       #print "power on"
-      self.state = self.STATE_WELCOME
-      self.prevState = self.STATE_WELCOME
+      self.state = self.states.STATE_WELCOME
+      self.prevState = self.states.STATE_WELCOME
       self.disp.lcd.on()
       self.disp.sLed.off()
       self.disp.mLed.off()
@@ -194,9 +198,9 @@ class Display:
       # Save the last menu to restore
       self.prevState = self.lastMenu
       # Set the state (refreshed next cycle) only if not volume
-      #if self.state != self.STATE_VOLUME or self.state != self.STATE_MUTED:
+      #if self.state != self.states.STATE_VOLUME or self.state != self.states.STATE_MUTED:
       #  self.prevState = self.state
-      self.state = self.STATE_MUTED
+      self.state = self.states.STATE_MUTED
       
     def muteOff(self):
       #print "muteOff: " + str(self.state)
@@ -210,20 +214,20 @@ class Display:
       self.stopAllTimers()
       self.volumeTimer.start()
       # Set the previous state (as long as it's not the volume or tone state)
-      if self.state != self.STATE_VOLUME and self.state != self.STATE_TONE:
+      if self.state != self.states.STATE_VOLUME and self.state != self.states.STATE_TONE:
         self.prevState = self.state
       # now set the current state to volume
-      self.state = self.STATE_VOLUME 
+      self.state = self.states.STATE_VOLUME 
       
     def showTone(self):
       #print "showTone"
       self.stopAllTimers()
       self.toneTimer.start()
       # Set the previous state (as long as it's not the tone or volume state)
-      if self.state != self.STATE_TONE and self.state != self.STATE_VOLUME:
+      if self.state != self.states.STATE_TONE and self.state != self.states.STATE_VOLUME:
         self.prevState = self.state
       # now set the current state to tone
-      self.state = self.STATE_TONE 
+      self.state = self.states.STATE_TONE 
     
     def setVolume(self, vol):
       self.disp.vol.set(vol)
@@ -239,7 +243,7 @@ class Display:
       self.selectLedTimer.start()
       self.startClock()
       self.prevState = self.state
-      self.state = self.STATE_MEDIA
+      self.state = self.states.STATE_MEDIA
       self.lastMenu = self.state      
 
     def showMp3(self):
@@ -248,17 +252,36 @@ class Display:
       self.selectLedTimer.start()
       self.sTextLine2.startScroll()
       self.sTextLine2.startBlink()
-      #self.startClock()
       self.prevState = self.state
-      self.state = self.STATE_MP3
+      self.state = self.states.STATE_MP3
       self.lastMenu = self.state
+
+    def showRadio(self):
+      self.stopAllTimers()
+      self.disp.sLed.on()
+      self.selectLedTimer.start()
+      self.sTextLine2.startScroll()
+      self.sTextLine2.startBlink()
+      self.prevState = self.state
+      self.state = self.states.STATE_RADIO
+      self.lastMenu = self.state
+
+    def showAux(self):
+      self.stopAllTimers()
+      self.disp.sLed.on()
+      self.selectLedTimer.start()
+      self.sTextLine2.startScroll()
+      self.sTextLine2.startBlink()
+      self.prevState = self.state
+      self.state = self.states.STATE_AUX
+      self.lastMenu = self.state      
         
     def showWelcome(self):
       #print "showWelcome"
       self.stopAllTimers()
       self.welcomeTimer.start()
       self.prevState = self.state
-      self.state = self.STATE_WELCOME
+      self.state = self.states.STATE_WELCOME
       
     #########################
     # UPDATE LCD LINE BUFFERS
@@ -283,16 +306,26 @@ class Display:
 
     def updateMediaStateBuffers(self):
       # Showing static text on Line 1
-      self.sTextLine1.setText("     Media")          
+      self.sTextLine1.setText("     Media")
       # Showing the Clock on line 2
       self.sTextLine2.setText(self.getClock())
 
     def updateMp3StateBuffers(self):
       # scroll song playing in line 1
       # show time remaining in line 2
-      self.sTextLine1.setText("      Mp3")      
+      self.sTextLine1.setText("      Mp3")
+      self.sTextLine2.setText("")
+
+    def updateRadioStateBuffers(self):
+      # RDBS Display (todo)      
+      self.sTextLine1.setText("    Radio")
       self.sTextLine2.setText("")
     
+    def updateAuxStateBuffers(self):
+      # AUX Display (todo)
+      self.sTextLine1.setText("      Aux")
+      self.sTextLine2.setText("")
+
     def updateWelcomeStateBuffers(self):
       self.sTextLine1.setText("Master " + chr(246) + " Control")
       self.sTextLine2.setText("v0.3 Ronald Diaz")         
@@ -332,16 +365,22 @@ class Display:
     # restore prev state ( welcome | media | mp3 | muted)      
     def restorePreviousState(self):      
       self.state = self.prevState
-      if self.state == self.STATE_WELCOME:
+      if self.state == self.states.STATE_WELCOME:
         #print "restoring: welcome"
         self.showWelcome()
-      elif self.state == self.STATE_MEDIA:
+      elif self.state == self.states.STATE_MEDIA:
         #print "restoring: media"          
         self.showMedia()
-      elif self.state == self.STATE_MP3:
+      elif self.state == self.states.STATE_MP3:
         #print "restoring: mp3"
         self.showMp3()
-      elif self.state == self.STATE_MUTED:
+      elif self.state == self.states.STATE_RADIO:
+        #print "restoring: radio"
+        self.showRadio()
+      elif self.state == self.states.STATE_AUX:
+        #print "restoring: aux"
+        self.showAux()
+      elif self.state == self.states.STATE_MUTED:
         #print "restoring: muted"
         self.muteOn()
    

@@ -56,6 +56,10 @@ class ControllerServer(Resource):
       return self.controller.selectMedia()
     elif sw == "selectMp3" or sw == "select1":
       return self.controller.selectMp3()
+    elif sw == "selectRadio" or sw == "select2":
+      return self.controller.selectRadio()
+    elif sw == "selectAux" or sw == "select3":
+      return self.controller.selectAux()    
     elif sw == "volume":
       volume = 0
       try:
