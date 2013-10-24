@@ -1,18 +1,12 @@
-#!/usr/bin/env python
-#
-# W. Greathouse 13-Feb-2013
-# 
-#   Enable I2C on P1 and P5 (Rev 2 boards only)
-#
-
-# #######
-# For I2C configuration test
 import os
 import mmap
 
 ######################################
 #
 # Class for reseting i2c ports on RPi
+#
+# Based off script by:
+# W. Greathouse 13-Feb-2013
 #
 # Ronald Diaz ronald@ronalddiaz.net
 #

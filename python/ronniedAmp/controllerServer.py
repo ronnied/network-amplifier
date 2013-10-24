@@ -92,6 +92,14 @@ class ControllerServer(Resource):
       except ValueError:
         treble = 0
       return self.controller.trebleSet(treble)
+    # Radio
+    elif sw == "radioStation":
+      station = 0
+      try:
+        station = seg[3]
+      except ValueError:
+        station = 0
+      return self.controller.radioStationSet(station)    
 
     # Granular commands
     #            

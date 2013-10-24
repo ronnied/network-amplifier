@@ -258,6 +258,10 @@ class Controller():
     self.display.setTone(self.bass, self.treble)
     return self.ok()
 
+  def radioStationSet(self, station):
+    self.radio.setStation(station)
+    return self.ok()
+
   # Getters
   def volumeGet(self):
     return self.volume
@@ -268,5 +272,6 @@ class Controller():
              'mute' : self.muteState,
              'select' : self.selectState,
              'bass': self.bass,
-             'treble': self.treble}
+             'treble': self.treble,
+             'radioStation': self.radio.getStation()}
     return json.dumps(data)    
