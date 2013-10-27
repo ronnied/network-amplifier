@@ -119,9 +119,9 @@ class ControllerServer(Resource):
     #
     if sw == "all":
       return self.controller.getAll()       
+    elif sw == "status":      
+      return self.controller.getAll()       
     else:
       msg = "not implemented"
       #print msg
       return msg
-
-

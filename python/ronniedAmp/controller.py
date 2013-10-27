@@ -260,7 +260,7 @@ class Controller():
 
   def radioStationSet(self, station):
     self.radio.setStation(station)
-    return self.ok()
+    return self.getAll()
 
   # Getters
   def volumeGet(self):
@@ -273,5 +273,8 @@ class Controller():
              'select' : self.selectState,
              'bass': self.bass,
              'treble': self.treble,
-             'radioStation': self.radio.getStation()}
-    return json.dumps(data)    
+             'radio': {
+                'station' : self.radio.station
+              }
+            }
+    return json.dumps(data)
