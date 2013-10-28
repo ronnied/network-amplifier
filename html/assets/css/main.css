@@ -1,0 +1,690 @@
+/* ==========================================================================
+   HTML5 Boilerplate styles - h5bp.com (generated via initializr.com)
+   ========================================================================== */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #ccc;
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.4;
+    background-color: #000;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+img {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+
+/* ===== Initializr Styles ==================================================
+   Author: Jonathan Verrecchia - verekia.com/initializr/responsive-template
+   ========================================================================== */
+
+body {
+    font: 16px/26px Helvetica, Helvetica Neue, Arial;
+    background-color: #000;
+}
+
+.wrapper {
+    width: 90%;
+    margin: 0 5%;
+}
+
+.main-container {
+   background: url('../images/background.jpg');
+}
+
+.header-container {
+    padding: 0;
+    margin: 0;
+}
+
+.footer-container,
+.main aside {
+}
+
+.header-container,
+.footer-container,
+.main aside {
+    background: url('../images/background.jpg');
+}
+
+.title {
+    color: white;
+}
+
+/* ==============
+    MOBILE: Menu
+   ============== */
+
+nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    display: inline-block;
+    float: left;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    margin-right: 7px;
+
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+
+    color: white;
+    background: #111;
+    /*opacity: 0.99;    */
+}
+
+nav a:hover,
+nav a:visited {
+    color: white;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* ==============
+    MOBILE: Main
+   ============== */
+
+.main {
+    padding: 0;
+}
+
+.main article h1 {
+    font-size: 2em;
+}
+
+.main aside {
+    color: white;
+    padding: 0px 5% 10px;
+}
+
+.footer-container footer {
+    padding-top: 10px;    
+    padding-bottom: 10px;
+    padding-left: 0;
+    padding-right 0;
+}
+
+/* ===============
+    ALL: IE Fixes
+   =============== */
+
+.ie7 .title {
+    padding-top: 20px;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media only screen and (min-width: 480px) {
+
+/* ====================
+    INTERMEDIATE: Menu
+   ==================== */
+
+    nav a {
+        float: left;
+        width: 27%;
+        margin: 0 1.7%;
+        padding: 25px 2%;
+        margin-bottom: 0;
+    }
+
+    nav li:first-child a {
+        margin-left: 0;
+    }
+
+    nav li:last-child a {
+        margin-right: 0;
+    }
+
+/* ========================
+    INTERMEDIATE: IE Fixes
+   ======================== */
+
+    nav ul li {
+        display: inline;
+    }
+
+    .oldie nav a {
+        margin: 0 0.7%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+
+/* ====================
+    WIDE: CSS3 Effects
+   ==================== */
+
+    .header-container,
+    .main aside {
+        -webkit-box-shadow: 0 5px 10px #aaa;
+           -moz-box-shadow: 0 5px 10px #aaa;
+                box-shadow: 0 5px 10px #aaa;
+    }
+
+/* ============
+    WIDE: Menu
+   ============ */
+
+    .title {
+        float: left;
+    }
+
+    nav {
+        float: right;
+        width: 38%;
+    }
+
+/* ============
+    WIDE: Main
+   ============ */
+
+    .main article {
+        float: left;
+        width: 57%;
+    }
+
+    .main aside {
+        float: right;
+        width: 28%;
+    }
+}
+
+@media only screen and (min-width: 1140px) {
+
+/* ===============
+    Maximal Width
+   =============== */
+
+    .wrapper {
+        width: 1026px; /* 1140px - 10% for margins */
+        margin: 0 auto;
+    }
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 100%;
+}
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.clear{
+    clear: both;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.fleft {
+    float: left;
+}
+
+.fright {
+    float: right;
+}
+
+.tcenter {
+    text-align: center;
+}
+
+.acenter {
+    margin:0 auto;
+}
+
+/* ==========================================================================
+   Print styles
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow:none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+/* amplifier control */
+.amp-slider-container {
+    padding: 13px 20px;
+}
+
+.pt20 {
+    padding-top: 20px;
+}
+
+.pb20 {
+    padding-bottom: 20px;
+}
+
+.circle {
+    border-radius: 20px;
+}
+
+.btn-header {
+    width: 65px;
+    height: 65px;
+}
+#btn-media {
+    background: url('../images/menu-tv.png') no-repeat center;    
+}
+#btn-mp3 {
+    background: url('../images/menu-mp3.png') no-repeat center;    
+}
+#btn-radio {
+    background: url('../images/menu-radio.png') no-repeat center;    
+}
+#btn-aux {
+    background: url('../images/menu.png') no-repeat center;    
+}
+.panel {
+    border-radius: 20px;
+    border: 1px solid black;
+    background-color: #000;    
+    height: 185px;
+    margin: 0 auto;
+}
+
+@font-face {
+    font-family: MyridPro;
+    src: url("../fonts/MyridPro.ttf") format("opentype");
+}
+
+@font-face {
+    font-family: DigitalSeven;
+    src: url("../fonts/digital-7.ttf") format("opentype");
+}
+
+.yellow {
+    color: #d1ef22;
+}
+.blue {
+    color: #12aab2;
+}
+.green {
+    color: #24ed24;
+}
+.grey {
+    color: #878787;
+}
+
+.digital {
+    font-family: DigitalSeven;
+    font-size: 100%;
+}
+.myrid {
+    font-family: MyridPro;
+}
+
+/* RADIO PAGE */
+
+#radio-view {
+    background: black;
+    border-radius: 1em;
+    margin: 0;
+}
+.fs14 {
+    line-height: 14px;
+    font-size: 14px;
+}
+.fs25 {
+    line-height: 25px;
+    font-size: 25px;
+}
+.fs30 {
+    line-height: 30px;
+    font-size: 30px;
+}
+.fs35 {
+    line-height: 35px;
+    font-size: 35px;
+}
+.fs80 {
+    line-height: 100px;
+    font-size: 80px;
+}
+.fs100 {
+    line-height: 120px;
+    font-size: 100px;
+}
+
+#radio-frequency {
+    text-align: center;    
+    margin: 0;
+    padding: 0;
+}
+
+#radio-station-name {
+    font-family: MyridPro;
+    font-size: 300%;
+    text-align: center;
+}
+
+#radio-station-name span {
+    font-family: DigitalSeven;
+    font-size: 1em;
+    /* float: right; */
+    margin-right: 10px;
+}
+
+#radio-controls {
+    margin: 0 auto;
+    border-top: 1px solid grey;
+    padding: 0px;
+    width:95%;
+}
+
+#radio-prev {
+   background: url('../images/radio-prev.png') no-repeat center;  
+   width: 23px;
+   height:23px;
+   display: inline-block;
+   padding:5px;
+}
+
+#radio-next {
+   background: url('../images/radio-next.png') no-repeat center;
+   width: 23px;
+   height:23px;
+   display: inline-block;
+   padding:5px;
+}
+
+#radio-name {
+    padding: 0;    
+    height:20px;
+    line-height: 14px;
+    text-align: center;
+}
+#radio-name span {
+    float: right;
+    margin-right: 10px;
+}
+
+#radio-footer {
+    border-top: 1px solid #222;
+    margin-top: 10px;
+/*    border: 1px solid white;*/
+}
+
+#radio-playing {
+    text-align: center;
+/*    border: 1px solid green;*/
+    width: 170px;
+    /*width: 100%;*/
+}
+
+#scrollingText {
+    /*width: 200px;*/
+/*    height: 70px;*/
+    position: relative;
+    border: solid 1px #ccc;
+    padding-top: 20px;
+}
+
+#scrollingText div.scrollableArea p {
+    display: block;
+    float: left;
+    margin: 0;
+    padding-right: 20px;
+    font-family: Georgia,Times, 'Times New Roman', Serif; 
+    font-size: 16px;
+    line-height: 10px;
+/*    font-weight: bold; */
+/*    background-color: #000; 
+    color: #000; */
+    white-space: nowrap;
+}
+
+#radio-mhz {
+    position: relative;    
+    top:-25px;
+    margin-right: 5px;
+    float: right;
+}
+
+#controls-container {
+    background-color: #000;
+    border-radius: 20px;
+    border: 2px solid black;
+    /*opacity: 0.4;*/
+}
+
+.button-footer {
+   width: 23px;
+   height:23px;
+   display: inline-block; 
+   padding:6px;
+}
+
+#mp3-list {
+   background: url('../images/mp3-list.png') no-repeat center;      
+}
+#mp3-repeat {
+   background: url('../images/mp3-repeat.png') no-repeat center;      
+}
+#mp3-prev {
+   background: url('../images/mp3-prev.png') no-repeat center;      
+}
+#mp3-play {
+   background: url('../images/mp3-play.png') no-repeat center;      
+}
+#mp3-next {
+   background: url('../images/mp3-next.png') no-repeat center;      
+}
+#mp3-shuffle {
+   background: url('../images/mp3-shuffle.png') no-repeat center;      
+}
+#mp3-playing {
+   background: url('../images/mp3-playing.png') no-repeat center;      
+}
+
+.buttons {
+    float:right;
+    position:relative;
+    left:-57%;
+    text-align:left;
+}
+.buttons ul {
+    list-style:none; 
+    position:relative;
+    left:50%;
+}
+.buttons li {
+    float:left;
+    position:relative;
+}
+.buttons a {
+    text-decoration:none;
+    margin:4px;
+    background:none;
+    float:left;    
+    color:#fff;
+    padding:2px 5px;
+    text-align:center;
+    white-space:nowrap;
+}
+/*#content{ overflow:hidden }*/
+
+.music-buttons {
+    width: 17px;
+}

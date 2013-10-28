@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class=" js flexbox canvas canvastext webgl touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><!--<![endif]-->
+<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Amplifier Control</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="./assets/css/normalize.min.css">
+        <link rel="stylesheet" href="./assets/css/main.css">
+
+        <script src="./assets/js/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+
+        <link rel="stylesheet" href="./assets/css/jquery-ui.css" />
+    </head>
+    <body>
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <nav>
+                    <ul class="nav-amp">
+                        <li><a href="#" id="btn-aux" class="circle btn-header"></a></li>
+                        <li><a href="#" id="btn-radio" class="circle btn-header"></a></li>
+                        <li><a href="#" id="btn-media" class="circle btn-header"></a></li>
+                        <li><a href="#" id="btn-mp3" class="circle btn-header"></a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                <div id="panel-menu" class="grey panel">        
+                    <div id="screen-inner">
+                        <p id="info-volume"></p>
+                        <p id="info-mute"></p>
+                        <p id="info-treble"></p>
+                        <p id="info-bass"></p>
+                    </div>
+                </div>
+
+                <div id="panel-radio" style="display: none;" class="yellow panel">        
+                    <div id="screen-inner">
+                        <div id="radio-frequency" class="digital fs100">106.9</div>                        
+                        <div>
+                            <div id="radio-name">Nova FM</div>
+                            <div id="radio-mhz">MHZ</div>
+                        </div>
+                        <div class="tcenter acenter">
+                            <div id="radio-footer" class="tcenter acenter clearfix">
+                                <div id="radio-prev" class="fleft"></div>
+                                <div id="radio-playing" class="fleft">&nbsp;</div>
+    <!--                             <div id="scrollingText">
+                                    <p>Oribital - Plump DJ's</p>                                
+                                </div> -->
+                                <div id="radio-next" class="fleft"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-tv" style="display: none;" class="blue panel">        
+                    <div id="screen-inner">
+                        <div id="" class="digital fs100 tcenter">Media</div>
+                        <div id="media-date" class="digital tcenter fs25"></div>
+                        <div id="media-clock" class="digital tcenter fs30"></div>                        
+                    </div>
+                </div>
+
+                <div id="panel-mp3" style="display: none;" class="green panel">        
+                    <div id="screen-inner">
+                        <div id="" class="digital fs80 tcenter">Music</div>
+                        <div id="music-playing" class="tcenter fs14">&nbsp;</div>
+                        <!-- <div id="music-artist" class="tcenter">&nbsp;</div> -->
+              <!--           <div id="music-button-container" class=""> -->
+                            <div id="music-buttons" class="buttons">
+                                <ul>
+                                    <li><a id="mp3-list" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-repeat" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-prev" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-play" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-next" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-shuffle" class="music-buttons">&nbsp;</a></li>
+                                    <li><a id="mp3-playing" class="music-buttons">&nbsp;</a></li>
+                                </ul> 
+                            </div>  
+                      <!--   </div>   -->                                      
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="footer-container">
+            <footer class="wrapper">
+                <div id="controls-container">
+                    <div class="amp-slider-container pt20">
+                        <div id="vol-slider"></div>
+                    </div>
+                    <div class="amp-slider-container">
+                        <div id="bass-slider"></div>
+                    </div>
+                    <div class="amp-slider-container pb20">
+                        <div id="treble-slider"></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <script src="./assets/js/jquery.min.js"></script>
+        <!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>        
+        <script>window.jQuery || document.write('<script src="./assets/js/vendor/jquery-1.8.0.min.js"><\/script>')</script>
+        <script src="./assets/js/main.js"></script>   
+
+</body></html>
