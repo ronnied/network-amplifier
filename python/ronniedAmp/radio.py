@@ -23,6 +23,17 @@ class Radio:
 
   # High Level Commands
 
+  def getStatus(self):
+    data = {'power' : true,
+             'volume' : self.volume,
+             'station' : self.getStation()
+            }
+    return data
+    # return json.dumps(data)
+
+  # def getStation(self):
+  #   data = {'name' : self.station.name}
+
   def setVolume(self, volume):
     self.volume = volume
     self._updateVolume()
@@ -88,22 +99,3 @@ class Radio:
 
     # Set default station
     self._updateStation()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

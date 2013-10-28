@@ -2,6 +2,7 @@ from ronniedAmp.display import Display
 from ronniedAmp.pt2314 import PT2314
 from ronniedAmp.i2c import I2cInit
 from ronniedAmp.radio import Radio
+from ronniedAmp.mp3 import Mp3
 from time import sleep
 import json
 
@@ -85,6 +86,9 @@ class Controller():
 
     # i2c Radio Resource
     self.radio = Radio()
+
+    # mpd control Resource
+    self.mp3 = Mp3()
   
   # json formatted ok response
   def ok(self, status = "ok"):
@@ -94,8 +98,8 @@ class Controller():
   # Power On
   #
   def powerOn(self):
-    if self.powerState == True:            
-      return self.ok("ok. Power already on.")   
+    # if self.powerState == True:            
+    #   return self.ok("ok. Power already on.")   
     self.powerState = True
     #self.audio.powerOn()    
     self.volumeSet(50)
@@ -109,17 +113,17 @@ class Controller():
     self.audio.setBass(0)
     self.audio.setTreble(0)
     self.display.powerOn()
-    return self.ok()
+    return self.getAll()
 
   # Power Off
   #
   def powerOff(self):
-    if self.powerState == False:            
-      return self.ok("Power already off.")      
+    # if self.powerState == False:            
+    #   return self.ok("Power already off.")      
     self.powerState = False
     #self.audio.powerOff()
     self.display.powerOff()
-    return self.ok()
+    return self.getAll()
 
   # Select Audio Input [ Media | MP3 ]
   #
@@ -129,31 +133,31 @@ class Controller():
     self.audio.selectChannel(0)
     self.display.showMedia()
     self.selectState = 0
-    return self.ok()
+    return self.getAll()
 
   def selectMp3(self):
-    if self.selectState == 1:
-      return self.ok("ok. Mp3 already selected.")
+    # if self.selectState == 1:
+    #   return self.ok("ok. Mp3 already selected.")
     self.audio.selectChannel(1)
     self.display.showMp3()
     self.selectState = 1
-    return self.ok()
+    return self.getAll()
 
   def selectRadio(self):
-    if self.selectState == 2:
-      return self.ok("ok. Radio already selected.")
+    # if self.selectState == 2:
+    #   return self.ok("ok. Radio already selected.")
     self.audio.selectChannel(2) # route audio input
-    #self.display.showRadio()    
+    self.display.showRadio()    
     self.selectState = 2
-    return self.ok()
+    return self.getAll()
 
   def selectAux(self):
-    if self.selectState == 3:              
-      return self.ok("ok. Aux already selected.")
+    # if self.selectState == 3:              
+    #   return self.ok("ok. Aux already selected.")
     self.audio.selectChannel(3) # route audio input
-    #self.display.showAux()
+    self.display.showAux()
     self.selectState = 3
-    return self.ok()
+    return self.getAll()
 
   def selectToggle(self):
     # toggle through states
@@ -174,7 +178,7 @@ class Controller():
     elif self.selectState == 3:
       self.audio.selectChannel(3)
       self.selectAux()
-    return self.ok()
+    return self.getAll()
 
   def muteOn(self):
     if self.muteState == True:
@@ -183,7 +187,7 @@ class Controller():
     self.audio.muteOn()
     self.display.muteOn()    
     self.muteState = True
-    return self.ok()
+    return self.getAll()
 
   def muteOff(self):
     if self.muteState == False:
@@ -192,7 +196,7 @@ class Controller():
     self.audio.muteOff()
     self.display.muteOff()    
     self.muteState = False
-    return self.ok()
+    return self.getAll()
 
   def muteToggle(self):
     #print "mute toggle: currently: " + str(self.muteState)
@@ -200,7 +204,7 @@ class Controller():
       self.muteOn()
     else:
       self.muteOff()
-    return self.ok()
+    return self.getAll()
 
   # Volume Methods
   #
@@ -208,13 +212,13 @@ class Controller():
     self.volume = self.volumeValidate(self.volume + 1)
     self.audio.setVolume(self.volumei2c)
     self.display.volumeSetLcd(self.volume)
-    return self.ok()
+    return self.getAll()
 
   def volumeDown(self):
     self.volume = self.volumeValidate(self.volume - 1)
     self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return self.ok() 
+    return self.getAll()
 
   def volumeDelta(self, delta=0):
     if delta == 0:
@@ -223,14 +227,14 @@ class Controller():
     self.volume = int(self.volumeValidate(int(self.volume) + (delta / 2)))    
     self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return self.ok()
+    return self.getAll()
 
   def volumeSet(self, volume):
     self.volume = self.volumeValidate(volume)
     #print "controller:volume:" + str(self.volume)
     self.audio.setVolume(self.volumei2c)
     self.display.setVolume(self.volume)
-    return self.ok()   
+    return self.getAll()  
       
   def volumeValidate(self, vol):
     #print "controller:volumeValidate:" + str(vol)
@@ -251,12 +255,12 @@ class Controller():
   def bassSet(self, bass):
     self.bass = self.audio.setBass(bass)
     self.display.setTone(self.bass, self.treble)
-    return self.ok()
+    return self.getAll()
 
   def trebleSet(self, treble):
     self.treble = self.audio.setTreble(treble)
     self.display.setTone(self.bass, self.treble)
-    return self.ok()
+    return self.getAll()
 
   def radioStationSet(self, station):
     self.radio.setStation(station)
@@ -266,8 +270,19 @@ class Controller():
   def volumeGet(self):
     return self.volume
 
+  def getStateString(self, state):
+    if state==0:
+      return 'media'
+    elif state==1:
+      return 'mp3'
+    elif state==2:
+      return 'radio'
+    elif state==3:
+      return 'aux'
+
   def getAll(self):
     data = {'power' : self.powerState,
+            'state' : self.getStateString(self.selectState),
              'volume' : self.volume,
              'mute' : self.muteState,
              'select' : self.selectState,
@@ -275,6 +290,7 @@ class Controller():
              'treble': self.treble,
              'radio': {
                 'station' : self.radio.station
-              }
+             },
+              'mp3': self.mp3.getStatus()
             }
     return json.dumps(data)
