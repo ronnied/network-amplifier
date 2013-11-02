@@ -90,11 +90,13 @@ class Radio:
     time.sleep(1) 
 
     #write x4001 to reg 2 to turn off mute and activate IC
-    list1 = [1] 
+    list1 = [1]
     w6 = self.i2c.write_i2c_block_data(self.i2cAddress, 64, list1) 
-    time.sleep(.1) 
+    time.sleep(.1)
 
-    list1 = [1,0,0,0,0,0,1] 
+    #write volume 0 dBFS = b1111
+    list1 = [1,0,0,0,0,0,15]
+    print list1
     w6 = self.i2c.write_i2c_block_data(self.i2cAddress, 64, list1) 
 
     # Set default station
