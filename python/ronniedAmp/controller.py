@@ -2,7 +2,7 @@ from ronniedAmp.display import Display
 from ronniedAmp.pt2314 import PT2314
 from ronniedAmp.i2c import I2cInit
 from ronniedAmp.radio import Radio
-from ronniedAmp.mp3 import Mp3
+#from ronniedAmp.mp3 import Mp3
 from time import sleep
 import json
 
@@ -88,7 +88,7 @@ class Controller():
     self.radio = Radio()
 
     # mpd control Resource
-    self.mp3 = Mp3()
+    #self.mp3 = Mp3()
   
   # json formatted ok response
   def ok(self, status = "ok"):
@@ -290,7 +290,7 @@ class Controller():
              'treble': self.treble,
              'radio': {
                 'station' : self.radio.station
-             },
-              'mp3': self.mp3.getStatus()
+             }#,
+              #'mp3': self.mp3.getStatus()
             }
     return json.dumps(data)
