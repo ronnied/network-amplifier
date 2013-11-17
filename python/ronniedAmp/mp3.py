@@ -13,9 +13,12 @@ class Mp3:
     self.volume = 0
     self.mute = False
     self.song = ""
-    self.mpd = mpd.MPDClient()
-    self.mpd.connect("localhost", 6600)  
-
+    try:
+      self.mpd = mpd.MPDClient()
+      self.mpd.connect("localhost", 6600) 
+    except:
+      self.mpd = null
+        
   # High Level Commands
   def getStatus(self):
     return self.mpd.currentsong()
@@ -23,12 +26,12 @@ class Mp3:
   def getSongPlaying(self):    
     return self.mpd.currentsong()
 
-  def setVolume(self, volume):
-    self.volume = volume
-    self._updateVolume()
+  # def setVolume(self, volume):
+  #   self.volume = volume
+  #   self._updateVolume()
     
-  def muteOn(self):
-    self.mute = True
+  # def muteOn(self):
+  #   self.mute = True
 
-  def muteOff(self):
-    self.mute = False
+  # def muteOff(self):
+  #   self.mute = False

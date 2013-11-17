@@ -266,7 +266,10 @@ $( document ).ready(function() {
               amplifier.mp3.song.title = data.Title;
               amplifier.mp3.song.artist = data.Artist;
               amplifier.updateGui("mp3");
-            });  
+            }).fail(function() {
+              amplifier.mp3.song.title = "network"
+              amplifier.mp3.song.artist = "error";
+            })
         });
       },
       selectRadio: function() {
@@ -301,7 +304,7 @@ $( document ).ready(function() {
       network: {
         url: "http://192.168.1.7/",
         timer: null,
-        delay: 2000,
+        delay: 5000,
         init: function() {
           window.clearTimeout(amplifier.network.timer);
         },
@@ -510,8 +513,12 @@ $( document ).ready(function() {
           // Switch between playlist view and currently playing view
         },
         updatePanel: function() {
-          $("#music-playing").html(amplifier.mp3.song.title);
-          $("#music-artist").html(amplifier.mp3.song.artist); 
+          if (typeof amplifier.mp3.song != 'undefined') {
+              $("#music-playing").html(amplifier.mp3.song.title);
+          }
+          if (typeof amplifier.mp3.song != 'undefined') {
+              $("#music-artist").html(amplifier.mp3.song.artist); 
+          }          
           //console.log("updating mp3 panel");
           //console.log(amplifier);
         }
