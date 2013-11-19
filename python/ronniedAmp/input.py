@@ -34,6 +34,15 @@ class Input:
       self.http = httplib2.Http(".cache")
       self.client = self.HTTPCLIENT
       
+  def powerOff(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.powerOff()
+    else:
+      try:
+        response, content = self.input.http.request(self.ControllerServerUrl + "set/powerOff")
+      except:
+        print "couldn't connect to server :: ", sys.exc_info()[0]
+
   def selectToggle(self):
     if self.client == self.CONTROLLER:
       return self.controller.selectToggle()
@@ -76,17 +85,21 @@ class Input:
       # Input resource
       self.input = Input(Controller)
       
-    def run(self):        
+    def run(self):
       while True:
-        
+        # have both buttons being pushed at the same time?
+        if self.input.sButton.get_state() == True and self.input.mButton.get_state() == True:
+          # print "Shutting down..."
+          self.input.powerOff()
+
         # has the state of the select button toggled?
         if self.input.sButton.hasToggled() == True:
-          #print "Select Toggle..."
+          # print "Select Toggle..."
           self.input.selectToggle()
           
         # has the state of the mute button toggled?
         if self.input.mButton.hasToggled() == True:
-          #print "Mute Toggled..."
+          # print "Mute Toggled..."
           self.input.muteToggle()
 
         # monitor the Volume for changes
@@ -96,5 +109,4 @@ class Input:
           self.input.volumeDelta(delta)
 
         # save all current states        
-        sleep(self.MAIN_THREAD_DELAY)          
-        
+        sleep(self.MAIN_THREAD_DELAY)

@@ -32,6 +32,5 @@ class ToggleSwitch(Switch):
     lastToggle = self.toggleOn
     self.hasChanged()
     if lastToggle != self.toggleOn:
-      #print "hasToggled"
       return True
     return False

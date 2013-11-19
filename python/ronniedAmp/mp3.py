@@ -8,30 +8,20 @@ import time
 # Ronald Diaz ronald@ronalddiaz.net
 #
 class Mp3:
-  def __init__(self):
-    #self.
-    self.volume = 0
-    self.mute = False
-    self.song = ""
+  def __init__(self):      
     try:
       self.mpd = mpd.MPDClient()
-      self.mpd.connect("localhost", 6600) 
+      self.mpd.connect("localhost", 6600)
     except:
-      self.mpd = null
-        
+      self.mpd = False
+              
   # High Level Commands
   def getStatus(self):
-    return self.mpd.currentsong()
+    if self.mpd != False:
+      return self.mpd.currentsong()
+    return False
 
-  def getSongPlaying(self):    
-    return self.mpd.currentsong()
-
-  # def setVolume(self, volume):
-  #   self.volume = volume
-  #   self._updateVolume()
-    
-  # def muteOn(self):
-  #   self.mute = True
-
-  # def muteOff(self):
-  #   self.mute = False
+  def getSongPlaying(self):
+    if self.mpd != False:
+      return self.mpd.currentsong()
+    return False

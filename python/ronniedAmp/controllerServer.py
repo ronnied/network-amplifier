@@ -37,29 +37,29 @@ class ControllerServer(Resource):
   ########################################################  
   # Delegate incoming set  
   def routeSet(self, seg):
-      
+    
     # command to switch
     sw = seg[2]
     #print sw
     
     # High level commands
-    #
+    # 
     if sw == "muteToggle":
-      return self.controller.muteToggle() 
-    if sw == "muteOn":      
+      return self.controller.muteToggle()
+    elif sw == "muteOn":
       return self.controller.muteOn()
     elif sw == "muteOff":
       return self.controller.muteOff()
     elif sw == "selectToggle":
-      return self.controller.selectToggle()            
-    elif sw == "selectMedia" or sw == "select0": 
+      return self.controller.selectToggle()
+    elif sw == "selectMedia" or sw == "select0":
       return self.controller.selectMedia()
     elif sw == "selectMp3" or sw == "select1":
       return self.controller.selectMp3()
     elif sw == "selectRadio" or sw == "select2":
       return self.controller.selectRadio()
     elif sw == "selectAux" or sw == "select3":
-      return self.controller.selectAux()    
+      return self.controller.selectAux()
     elif sw == "volume":
       volume = 0
       try:
@@ -99,16 +99,16 @@ class ControllerServer(Resource):
         station = seg[3]
       except ValueError:
         station = 0
-      return self.controller.radioStationSet(station)    
+      return self.controller.radioStationSet(station)
 
     # Granular commands
-    #            
+    # 
     else:
       error = "Unknown command: " + str(sw)
       #print error
       return error
 
-  ########################################################  
+  ########################################################
   # Delegate incoming get    
   def routeGet(self, seg):
     # command to switch
@@ -118,9 +118,9 @@ class ControllerServer(Resource):
     # High level commands
     #
     if sw == "all":
-      return self.controller.getAll()       
-    elif sw == "status":      
-      return self.controller.getAll()       
+      return self.controller.getAll()
+    elif sw == "status":
+      return self.controller.getAll()
     else:
       msg = "not implemented"
       #print msg

@@ -31,13 +31,17 @@ class PT2314:
    
   # High Level Commands
 
+  def powerOff(self):
+    self.mute = True
+    self._updateAttenuation()
+
   def setVolume(self, volume):
     self.volume = volume
     self._updateVolume()
     
   def muteOn(self):
     self.mute = True
-    self._updateAttenuation()    
+    self._updateAttenuation()
 
   def muteOff(self):
     self.mute = False

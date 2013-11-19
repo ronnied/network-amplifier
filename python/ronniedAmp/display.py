@@ -78,7 +78,7 @@ class Display:
       # Volume change state
       # --> Volume Lingering state
       #    --> Back to current state
-      self.states = enum(STATE_WELCOME = 0, STATE_MEDIA = 1, STATE_MP3 = 2, STATE_RADIO = 3, STATE_AUX = 4,  STATE_MUTED = 5, STATE_VOLUME = 6, STATE_TONE = 7)
+      self.states = enum(STATE_WELCOME = 0, STATE_MEDIA = 1, STATE_MP3 = 2, STATE_RADIO = 3, STATE_AUX = 4,  STATE_MUTED = 5, STATE_VOLUME = 6, STATE_TONE = 7, STATE_SHUTDOWN = 8)
 
       # Timers
       #
@@ -152,6 +152,9 @@ class Display:
             # show media state (default)
             self.showMedia()
 
+        elif self.state == self.states.STATE_SHUTDOWN:
+          self.updateShutdownStateBuffers()
+
         ##########################################################
         # are the current buffers different from previous buffers?        
         if line1PrevBuffer != self.sTextLine1.getText() or line2PrevBuffer != self.sTextLine2.getText():
@@ -184,17 +187,18 @@ class Display:
       self.welcomeTimer.start()
       
     def powerOff(self):
-      self.disp.lcd.off()
-      self.disp.sLed.off()
-      self.disp.mLed.off()      
+      self.state = self.states.STATE_SHUTDOWN
+      self.disp.mLed.on()
+      self.disp.sLed.on()
+      self.stopAllTimers()
         
     def muteOn(self):
-      #print "muteOn: " + str(self.state)      
+      #print "muteOn: " + str(self.state)
       # mute led on
       self.disp.mLed.on()
       # Setup for blinking mute lcd
-      self.stopAllTimers()      
-      self.sTextLine1.startBlink()    
+      self.stopAllTimers()
+      self.sTextLine1.startBlink()
       # Save the last menu to restore
       self.prevState = self.lastMenu
       # Set the state (refreshed next cycle) only if not volume
@@ -277,7 +281,6 @@ class Display:
       self.lastMenu = self.state      
         
     def showWelcome(self):
-      #print "showWelcome"
       self.stopAllTimers()
       self.welcomeTimer.start()
       self.prevState = self.state
@@ -318,7 +321,7 @@ class Display:
 
     def updateRadioStateBuffers(self):
       # RDBS Display (todo)      
-      self.sTextLine1.setText("    Radio")
+      self.sTextLine1.setText("     Radio")
       self.sTextLine2.setText("")
     
     def updateAuxStateBuffers(self):
@@ -328,7 +331,11 @@ class Display:
 
     def updateWelcomeStateBuffers(self):
       self.sTextLine1.setText("Master " + chr(246) + " Control")
-      self.sTextLine2.setText("v0.3 Ronald Diaz")         
+      self.sTextLine2.setText("v0.4 Ronald Diaz")
+
+    def updateShutdownStateBuffers(self):
+      self.sTextLine1.setText("Shutting down...")
+      self.sTextLine2.setText("")
                 
     ####################
     # UPDATE LCD DISPLAY        

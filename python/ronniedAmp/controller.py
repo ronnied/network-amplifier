@@ -5,6 +5,7 @@ from ronniedAmp.radio import Radio
 from ronniedAmp.mp3 import Mp3
 from time import sleep
 import json
+import os
 
 # Amplifier Controller
 #
@@ -15,6 +16,7 @@ import json
 # i2cAmplifier <- outgoing
 # i2cRadio <- outgoing
 # relay module <- outgoing (todo)
+# mp3 <- outgoing
 #
 # Ronald Diaz 2013
 # ronald@ronalddiaz.net
@@ -43,15 +45,15 @@ import json
 # getMuteState
 # getSelectedInput
 #
-# MPD Commands (todo)
+# MPD Commands
 # isPlaying
 # getSong
 # getSongTimeRemain
 # getSongTimeTotal
 #
-# Radio Commands (todo)
+# Radio Commands
 # switch station
-# get rdbs
+# get rdbs (n/a)
 #
 class Controller():
   def __init__(self):
@@ -98,18 +100,18 @@ class Controller():
   # Power On
   #
   def powerOn(self):
-    # if self.powerState == True:            
-    #   return self.ok("ok. Power already on.")   
+    # if self.powerState == True:
+    #   return self.ok("ok. Power already on.")
     self.powerState = True
-    #self.audio.powerOn()    
+    #self.audio.powerOn()
     self.volumeSet(50)
     #self.audio.setVolume(0x10)
     self.audio.loudnessOn()
     self.muteOff()
     #self.audio.muteOff()
     self.selectMedia()
-    #self.audio.selectChannel(0)   
-    self.audio.setAttenuation(0,0) 
+    #self.audio.selectChannel(0)
+    self.audio.setAttenuation(0,0)
     self.audio.setBass(0)
     self.audio.setTreble(0)
     self.display.powerOn()
@@ -118,42 +120,33 @@ class Controller():
   # Power Off
   #
   def powerOff(self):
-    # if self.powerState == False:            
-    #   return self.ok("Power already off.")      
     self.powerState = False
-    #self.audio.powerOff()
+    self.audio.powerOff()
     self.display.powerOff()
-    return self.getAll()
+    os.system("poweroff")
+    return self.ok("shutting down")
 
   # Select Audio Input [ Media | MP3 ]
   #
   def selectMedia(self):
-    #if self.selectState == False:
-    #  return self.ok("ok. Media already selected.")
     self.audio.selectChannel(0)
     self.display.showMedia()
     self.selectState = 0
     return self.getAll()
 
   def selectMp3(self):
-    # if self.selectState == 1:
-    #   return self.ok("ok. Mp3 already selected.")
     self.audio.selectChannel(1)
     self.display.showMp3()
     self.selectState = 1
     return self.getAll()
 
   def selectRadio(self):
-    # if self.selectState == 2:
-    #   return self.ok("ok. Radio already selected.")
     self.audio.selectChannel(2) # route audio input
     self.display.showRadio()    
     self.selectState = 2
     return self.getAll()
 
   def selectAux(self):
-    # if self.selectState == 3:              
-    #   return self.ok("ok. Aux already selected.")
     self.audio.selectChannel(3) # route audio input
     self.display.showAux()
     self.selectState = 3
@@ -181,8 +174,6 @@ class Controller():
     return self.getAll()
 
   def muteOn(self):
-    if self.muteState == True:
-      return "ok. Already muted."
     #self.relay.muteOn()
     self.audio.muteOn()
     self.display.muteOn()    
@@ -222,7 +213,7 @@ class Controller():
 
   def volumeDelta(self, delta=0):
     if delta == 0:
-      return self.ok("ok. no change")
+      return self.ok("ok. no volume change")
     delta = int(delta)
     self.volume = int(self.volumeValidate(int(self.volume) + (delta / 2)))    
     self.audio.setVolume(self.volumei2c)
@@ -281,16 +272,15 @@ class Controller():
       return 'aux'
 
   def getAll(self):    
-    data = {'power' : self.powerState,
+    data = {
+            'power' : self.powerState,
             'state' : self.getStateString(self.selectState),
-             'volume' : self.volume,
-             'mute' : self.muteState,
-             'select' : self.selectState,
-             'bass': self.bass,
-             'treble': self.treble,
-             'radio': {
-                'station' : self.radio.station
-             },
-              'mp3': self.mp3.getStatus()
-            }
+            'volume' : self.volume,
+            'mute' : self.muteState,
+            'select' : self.selectState,
+            'bass': self.bass,
+            'treble': self.treble,
+            'radio': { 'station' : self.radio.station },
+            'mp3': self.mp3.getStatus()
+           }
     return json.dumps(data)
