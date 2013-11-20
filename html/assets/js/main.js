@@ -262,13 +262,23 @@ $( document ).ready(function() {
       selectMp3: function() {
         $.get(amplifier.network.url + "set/selectMp3", function(data) {          
           // Show song currently playing
-          $.getJSON(amplifier.network.url + "mpd/index.php?cmd=getCurrentSong", function(data) {
-              amplifier.mp3.song.title = data.Title;
-              amplifier.mp3.song.artist = data.Artist;
-              amplifier.updateGui("mp3");
+          // mpd/index.php?cmd=getCurrentSong"
+          $.getJSON(amplifier.network.url + "get/all", function(data) {
+            console.log(data)
+            if (typeof data.mp3 === 'object') {
+              amplifier.mp3.song.title = data.mp3.title;
+              amplifier.mp3.song.artist = data.mp3.artist;                        
+            } else {       
+              console.log("FALSE!!!!!!!!!!!!!!!");
+              console.log(data.mp3); 
+              amplifier.mp3.song.title = "server down";
+              amplifier.mp3.song.artist = "server down";
+              console.log(amplifier.mp3);              
+            }
+            amplifier.updateGui("mp3");
             }).fail(function() {
-              amplifier.mp3.song.title = "network"
-              amplifier.mp3.song.artist = "error";
+              amplifier.mp3.song.title = "network error";
+              amplifier.mp3.song.artist = "network error";
             })
         });
       },
@@ -513,14 +523,15 @@ $( document ).ready(function() {
           // Switch between playlist view and currently playing view
         },
         updatePanel: function() {
-          if (typeof amplifier.mp3.song != 'undefined') {
-              $("#music-playing").html(amplifier.mp3.song.title);
+          var title = "Server error";
+          var artist = "";
+          if (typeof amplifier.mp3.song != 'undefined' && amplifier.mp3.song != false) {
+            console.log("song isn't false...");
+            title = amplifier.mp3.song.title
+            artist = amplifier.mp3.song.artist
           }
-          if (typeof amplifier.mp3.song != 'undefined') {
-              $("#music-artist").html(amplifier.mp3.song.artist); 
-          }          
-          //console.log("updating mp3 panel");
-          //console.log(amplifier);
+          $("#music-playing").html(title);
+          $("#music-artist").html(artist);           
         }
       }     
     }

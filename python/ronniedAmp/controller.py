@@ -57,9 +57,8 @@ import os
 #
 class Controller():
   def __init__(self):
-    #
+    
     # Amplifier States
-    #
     self.muteState = False    
     self.powerState = False
     self.selectState = 0 # 0 -> 2    
@@ -273,14 +272,14 @@ class Controller():
 
   def getAll(self):    
     data = {
-            'power' : self.powerState,
-            'state' : self.getStateString(self.selectState),
-            'volume' : self.volume,
-            'mute' : self.muteState,
-            'select' : self.selectState,
-            'bass': self.bass,
-            'treble': self.treble,
-            'radio': { 'station' : self.radio.station },
-            'mp3': self.mp3.getStatus()
+            'power'   : self.powerState,
+            'state'   : self.getStateString(self.selectState),
+            'volume'  : self.volume,
+            'mute'    : self.muteState,
+            'select'  : self.selectState,
+            'bass'    : self.bass,
+            'treble'  : self.treble,
+            'radio'   : { 'station' : self.radio.station },
+            'mp3'     : self.mp3.getStatus()
            }
     return json.dumps(data)
