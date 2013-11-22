@@ -38,6 +38,7 @@ $( document ).ready(function() {
         amplifier.updateNav(state);
         amplifier.updatePanel(state);
         amplifier.updateSliders(state);
+        amplifier.updateKnobs(state);
         amplifier.showPanel(state);
       },
       updateNav: function(state) {
@@ -117,6 +118,37 @@ $( document ).ready(function() {
             break;
         }
       },
+      updateKnobs: function(state) {
+        switch(state) {
+          case "media":
+            var a = "#12aab2";
+            var b = "#0bb";
+            var c = "#055";
+            break;
+          case "mp3":
+            var a = "#24ed24";
+            var b = "#0b0";
+            var c = "#050";
+            break;
+          case "radio":
+            var a = "#d1ef22";
+            var b = "#bb0";    
+            var c = "#550";
+            break;
+          case "aux":
+            var a = "#efefef";
+            var b = "#bbb";    
+            var c = "#555";
+            break;
+        }
+        // Update Volume Knob Value
+        amplifier.volumeKnob.i = parseInt(amplifier.audio.volume);
+        amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);        
+        // Update knob background colours
+        // $("#vol-slider").css('background', a);
+        // $("#vol-slider a").css('border', '4px solid ' + b).css('background-color', c);
+        // $("#vol-slider").slider("value", this.audio.volume);
+      },
       updateSliders: function(state) {
         //console.log(select);
         switch(state) {
@@ -190,12 +222,79 @@ $( document ).ready(function() {
           // Mp3
           amplifier.mp3.update(json);
       },
+      volumeKnob: {
+        v: null,
+        up:0,
+        down:0,
+        i:0,
+        $idir: $("div.idir"),
+        $ival: $("div.ival"),
+        incr: function() {
+              if(amplifier.volumeKnob.i<100) {
+                amplifier.volumeKnob.i++;
+                amplifier.volumeKnob.$idir.show().html("+").fadeOut();
+                amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);
+
+                amplifier.network.stop();
+                $.get(amplifier.network.url + "set/volume/" + amplifier.volumeKnob.i, function(amp) {
+                  amplifier.audio.volume = amp.volume
+                  amplifier.network.start();
+                });
+              }
+            },
+        decr: function() {
+            if(amplifier.volumeKnob.i>0) {
+              amplifier.volumeKnob.i--;
+              amplifier.volumeKnob.$idir.show().html("-").fadeOut();
+              amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);
+
+              amplifier.network.stop();
+              $.get(amplifier.network.url + "set/volume/" + amplifier.volumeKnob.i, function(amp) {
+                amplifier.audio.volume = amp.volume
+                amplifier.network.start();
+              });
+            }
+        },
+        change: function(value) {
+          if(amplifier.volumeKnob.v > value) {
+                if(amplifier.volumeKnob.up) {
+                    amplifier.volumeKnob.decr();
+                    amplifier.volumeKnob.up=0;
+                } else {
+                    amplifier.volumeKnob.up=1;
+                    amplifier.volumeKnob.down=0;
+                }
+            } else {
+                if(amplifier.volumeKnob.v < value) {
+                    if(amplifier.volumeKnob.down) {
+                        amplifier.volumeKnob.incr();
+                        amplifier.volumeKnob.down=0;
+                    } else { 
+                        amplifier.volumeKnob.down=1;
+                        amplifier.volumeKnob.up=0;
+                    }
+                }
+            }
+            amplifier.volumeKnob.v = value;
+        }
+      },      
       setupButtonHandlers: function() {
         // Top Nav Button Handlers
         $("#btn-media").click(function(){ amplifier.selectMedia(); });
         $("#btn-mp3").click(function(){ amplifier.selectMp3(); });
         $("#btn-radio").click(function(){ amplifier.selectRadio(); });
         $("#btn-aux").click(function(){ amplifier.selectAux(); });
+
+        // Main Volume Knob
+        $("input.infinite").knob({
+          min: 0,
+          max: 20,
+          stopper: false,
+          change: function (value) {
+            //console.log(el);
+            amplifier.volumeKnob.change(value);
+          }
+        });
 
         // Main Control Sliders
         $("#vol-slider").slider({
@@ -314,7 +413,7 @@ $( document ).ready(function() {
       network: {
         url: "http://192.168.1.7/",
         timer: null,
-        delay: 5000,
+        delay: 10000,
         init: function() {
           window.clearTimeout(amplifier.network.timer);
         },
@@ -440,19 +539,19 @@ $( document ).ready(function() {
         next: function(){
           // increment counter
           this.stationIdx++;
-          if(this.stationIdx>=this.stations.length){
+          if(this.stationIdx>=this.stations.length) {
             this.stationIdx=0;
           }
           return this.setByIndex(this.stationIdx);
         },
-        setByFrequency: function(freq){
+        setByFrequency: function(freq) {
           amplifier.radio.stationIdx = amplifier.radio.set
           $.get(amplifier.network.url + "set/radioStation/" + freq, function(data) {
             amplifier.radio.station = data.radio.station;
             amplifier.radio.updatePanel();
           });   
         },
-        setByIndex: function(index){
+        setByIndex: function(index) {
           amplifier.radio.stationIdx = index;
           $.get(amplifier.network.url + "set/radioStation/" + amplifier.radio.stations[index].freq, function(data){
             amplifier.radio.station = data.radio.station;
