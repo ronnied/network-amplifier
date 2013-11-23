@@ -63,7 +63,7 @@ class Radio:
 
   def _readConfig(self):
     # open config file
-    self.config = ConfigObj("config-radio")
+    self.config = ConfigObj("/root/config-radio")
     
     # read all the stations
     self.stations = self.config['stations']

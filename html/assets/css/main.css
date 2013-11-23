@@ -688,3 +688,6 @@ nav a:hover {
 .music-buttons {
     width: 17px;
 }
+.infinite {
+    display: none;
+}

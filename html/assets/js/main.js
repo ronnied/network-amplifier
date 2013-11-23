@@ -351,7 +351,8 @@ $( document ).ready(function() {
         $("#mp3-playing").click(function(){ amplifier.mp3.playing(); });
       },
       showNetworkFailed: function () {
-        alert("server connection failed");
+        // Show overlay
+        $("body").mask("<p class='retry-spinner'/><p>Network Error...</p><p class='retry-now'><a class=\"retry-now-a\" href=\"javascript:location.reload();\">retry now</a></p>");        
       },
       selectMedia: function() {
         $.get(amplifier.network.url + "set/selectMedia", function(data) {
