@@ -9,7 +9,6 @@ $( document ).ready(function() {
         treble: 0,
         state: 0,
         states: ["media", "mp3", "radio", "aux"],
-        tones: [-14, -12, -10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10, 12, 14],
         update: function(json) {
           this.power = json.power;
           this.mute = json.mute;
@@ -18,16 +17,6 @@ $( document ).ready(function() {
           this.bass = json.bass;
           this.treble = json.treble;
           this.state = json.state;
-        },
-        toneToPercent: function(tone) {
-          var coeff = parseFloat(1 / 0.28); // graduations
-          var tone = tone + 14; // offset
-          var value = parseFloat(tone) * parseFloat(coeff)
-          return parseInt(Math.ceil(value));
-        },
-        percentToTone: function(percent) {
-          var index = parseInt(Math.floor(parseFloat(percent) * 0.14));
-          return amplifier.audio.tones[index];
         }
       },
       setState: function (state) {
@@ -38,7 +27,6 @@ $( document ).ready(function() {
         amplifier.updateNav(state);
         amplifier.updatePanel(state);
         amplifier.updateSliders(state);
-        amplifier.updateKnobs(state);
         amplifier.showPanel(state);
       },
       updateNav: function(state) {
@@ -118,37 +106,6 @@ $( document ).ready(function() {
             break;
         }
       },
-      updateKnobs: function(state) {
-        switch(state) {
-          case "media":
-            var a = "#12aab2";
-            var b = "#0bb";
-            var c = "#055";
-            break;
-          case "mp3":
-            var a = "#24ed24";
-            var b = "#0b0";
-            var c = "#050";
-            break;
-          case "radio":
-            var a = "#d1ef22";
-            var b = "#bb0";    
-            var c = "#550";
-            break;
-          case "aux":
-            var a = "#efefef";
-            var b = "#bbb";    
-            var c = "#555";
-            break;
-        }
-        // Update Volume Knob Value
-        amplifier.volumeKnob.i = parseInt(amplifier.audio.volume);
-        amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);        
-        // Update knob background colours
-        // $("#vol-slider").css('background', a);
-        // $("#vol-slider a").css('border', '4px solid ' + b).css('background-color', c);
-        // $("#vol-slider").slider("value", this.audio.volume);
-      },
       updateSliders: function(state) {
         //console.log(select);
         switch(state) {
@@ -173,16 +130,16 @@ $( document ).ready(function() {
             var c = "#555";
             break;
         }
-        // Update slider background colours
-        $("#vol-slider").css('background', a);
-        $("#vol-slider a").css('border', '4px solid ' + b).css('background-color', c);
-        $("#vol-slider").slider("value", this.audio.volume);        
-        $("#bass-slider").css('background', a);
-        $("#bass-slider a").css('border', '4px solid ' + b).css('background-color', c);
-        $("#bass-slider").slider("value", this.audio.toneToPercent(this.audio.bass));
-        $("#treble-slider").css('background', a);
-        $("#treble-slider a").css('border', '4px solid ' + b).css('background-color', c);
-        $("#treble-slider").slider("value", this.audio.toneToPercent(this.audio.treble));
+
+        // Set Values      
+        $("#vol-slider").val(this.audio.volume);
+        $("#bass-slider").val(this.audio.bass);
+        $("#treble-slider").val(this.audio.treble);
+
+        // Set Colours
+        $(".noUi-background").css("background", a);
+        $(".noUi-handle").css("background", b);
+        $(".noUi-handle").css('border', '4px solid ' + b).css('background-color', c);
       },
       init: function() {
           // Get current state of amp...
@@ -221,63 +178,7 @@ $( document ).ready(function() {
           amplifier.radio.update(json);
           // Mp3
           amplifier.mp3.update(json);
-      },
-      volumeKnob: {
-        v: null,
-        up:0,
-        down:0,
-        i:0,
-        $idir: $("div.idir"),
-        $ival: $("div.ival"),
-        incr: function() {
-              if(amplifier.volumeKnob.i<100) {
-                amplifier.volumeKnob.i++;
-                amplifier.volumeKnob.$idir.show().html("+").fadeOut();
-                amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);
-
-                amplifier.network.stop();
-                $.get(amplifier.network.url + "set/volume/" + amplifier.volumeKnob.i, function(amp) {
-                  amplifier.audio.volume = amp.volume
-                  amplifier.network.start();
-                });
-              }
-            },
-        decr: function() {
-            if(amplifier.volumeKnob.i>0) {
-              amplifier.volumeKnob.i--;
-              amplifier.volumeKnob.$idir.show().html("-").fadeOut();
-              amplifier.volumeKnob.$ival.html(amplifier.volumeKnob.i);
-
-              amplifier.network.stop();
-              $.get(amplifier.network.url + "set/volume/" + amplifier.volumeKnob.i, function(amp) {
-                amplifier.audio.volume = amp.volume
-                amplifier.network.start();
-              });
-            }
-        },
-        change: function(value) {
-          if(amplifier.volumeKnob.v > value) {
-                if(amplifier.volumeKnob.up) {
-                    amplifier.volumeKnob.decr();
-                    amplifier.volumeKnob.up=0;
-                } else {
-                    amplifier.volumeKnob.up=1;
-                    amplifier.volumeKnob.down=0;
-                }
-            } else {
-                if(amplifier.volumeKnob.v < value) {
-                    if(amplifier.volumeKnob.down) {
-                        amplifier.volumeKnob.incr();
-                        amplifier.volumeKnob.down=0;
-                    } else { 
-                        amplifier.volumeKnob.down=1;
-                        amplifier.volumeKnob.up=0;
-                    }
-                }
-            }
-            amplifier.volumeKnob.v = value;
-        }
-      },      
+      },          
       setupButtonHandlers: function() {
         // Top Nav Button Handlers
         $("#btn-media").click(function(){ amplifier.selectMedia(); });
@@ -285,55 +186,44 @@ $( document ).ready(function() {
         $("#btn-radio").click(function(){ amplifier.selectRadio(); });
         $("#btn-aux").click(function(){ amplifier.selectAux(); });
 
-        // Main Volume Knob
-        $("input.infinite").knob({
-          min: 0,
-          max: 20,
-          stopper: false,
-          change: function (value) {
-            //console.log(el);
-            amplifier.volumeKnob.change(value);
-          }
-        });
-
         // Main Control Sliders
-        $("#vol-slider").slider({
-          change: function(event, ui) {
-            if(event.originalEvent) {
-              amplifier.network.stop();
-              $.get(amplifier.network.url + "set/volume/" + ui.value, function(amp) {
-                amplifier.audio.volume = amp.volume                
-                amplifier.network.start();
-              }); 
-            } else {
-             // console.log("PGM Change - do not call network");
-            }
-          } 
-        });
-        $("#bass-slider").slider({ 
-          change: function(event, ui) {         
-            if(event.originalEvent) {
-              amplifier.network.stop();
-              $.get(amplifier.network.url + "set/bass/" + amplifier.audio.percentToTone(ui.value), function(amp) {
-                amplifier.bass = amp.bass //amplifier.audio.toneToPercent(amp.bass)             
-                amplifier.network.start();
-              }); 
-            } else {
-              //console.log("PGM Change - do not call network");
-            }
+        $("#vol-slider").noUiSlider({
+          range: [0,100],
+          start: [20,30],
+          step: 1.58,
+          handles: 1,
+          slide: function() {
+            amplifier.network.stop();
+            $.get(amplifier.network.url + "set/volume/" + parseInt($(this).val()), function(amp) {
+              amplifier.audio.volume = amp.volume
+              amplifier.network.start();
+            });
           }
         });
-        $("#treble-slider").slider({ 
-          change: function(event, ui) {
-            if(event.originalEvent) {
-              amplifier.network.stop();
-              $.get(amplifier.network.url + "set/treble/" + amplifier.audio.percentToTone(ui.value), function(amp) {
-                amplifier.treble = amp.treble //amplifier.audio.toneToPercent(amp.treble)            
-                amplifier.network.start();
-              }); 
-            } else {
-              //console.log("PGM Change - do not call network");
-            }
+        $("#bass-slider").noUiSlider({
+          range: [-14,14],
+          start: [0,0],
+          step: 2,
+          handles: 1,
+          slide: function() {
+            amplifier.network.stop();
+            $.get(amplifier.network.url + "set/bass/" + parseInt($(this).val()), function(amp) {
+              amplifier.bass = amp.bass
+              amplifier.network.start();
+            });
+          }
+        });
+        $("#treble-slider").noUiSlider({
+          range: [-14,14],
+          start: [0,0],
+          step: 2,
+          handles: 1,
+          slide: function() {
+            amplifier.network.stop();
+            $.get(amplifier.network.url + "set/treble/" + parseInt($(this).val()), function(amp) {
+              amplifier.treble = amp.treble
+              amplifier.network.start();
+            });
           }
         });
         
@@ -364,16 +254,15 @@ $( document ).ready(function() {
           // Show song currently playing
           // mpd/index.php?cmd=getCurrentSong"
           $.getJSON(amplifier.network.url + "get/all", function(data) {
-            console.log(data)
+            //console.log(data)
             if (typeof data.mp3 === 'object') {
               amplifier.mp3.song.title = data.mp3.title;
               amplifier.mp3.song.artist = data.mp3.artist;                        
-            } else {       
-              console.log("FALSE!!!!!!!!!!!!!!!");
-              console.log(data.mp3); 
+            } else {
+              //console.log(data.mp3);
               amplifier.mp3.song.title = "server down";
               amplifier.mp3.song.artist = "server down";
-              console.log(amplifier.mp3);              
+              //console.log(amplifier.mp3);              
             }
             amplifier.updateGui("mp3");
             }).fail(function() {
@@ -559,7 +448,7 @@ $( document ).ready(function() {
           var title = "Server error";
           var artist = "";
           if (typeof amplifier.mp3.song != 'undefined' && amplifier.mp3.song != false) {
-            console.log("song isn't false...");
+            //console.log("song isn't false...");
             title = amplifier.mp3.song.title
             artist = amplifier.mp3.song.artist
           }
@@ -568,7 +457,6 @@ $( document ).ready(function() {
         }
       }     
     }
-
     // Initialise the main amplifier panel
     amplifier.init();
 });

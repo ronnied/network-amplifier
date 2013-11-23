@@ -425,7 +425,7 @@ nav a:hover {
 
 /* amplifier control */
 .amp-slider-container {
-    padding: 13px 20px;
+    padding: 16px 25px;
 }
 
 .pt20 {
@@ -626,6 +626,7 @@ nav a:hover {
     background-color: #000;
     border-radius: 20px;
     border: 2px solid black;
+    padding: 10px 0;
     /*opacity: 0.4;*/
 }
 
@@ -683,11 +684,6 @@ nav a:hover {
     text-align:center;
     white-space:nowrap;
 }
-/*#content{ overflow:hidden }*/
-
 .music-buttons {
     width: 17px;
-}
-.infinite {
-    display: none;
 }

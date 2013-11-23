@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="./assets/css/normalize.min.css">
         <link rel="stylesheet" href="./assets/css/main.css">
         <link rel="stylesheet" href="./assets/css/jquery-ui.css" />
+        <link rel="stylesheet" href="./assets/css/jquery.nouislider.css">
         <link rel="stylesheet" href="./assets/css/jquery.loadmask.css" />
-        <script src="./assets/js/modernizr-2.6.1-respond-1.1.0.min.js"></script>        
+        <script src="./assets/js/modernizr-2.6.1-respond-1.1.0.min.js"></script>
     </head>
     <body>
         <div class="header-container">
@@ -27,8 +28,7 @@
         </div>
         <div class="main-container">
             <div class="main wrapper clearfix">
-
-                <div id="panel-menu" class="grey panel">        
+                <div id="panel-menu" class="grey panel">
                     <div id="screen-inner">
                         <p id="info-volume"></p>
                         <p id="info-mute"></p>
@@ -36,10 +36,9 @@
                         <p id="info-bass"></p>
                     </div>
                 </div>
-
-                <div id="panel-radio" style="display: none;" class="yellow panel">        
+                <div id="panel-radio" style="display: none;" class="yellow panel">
                     <div id="screen-inner">
-                        <div id="radio-frequency" class="digital fs100">106.9</div>                        
+                        <div id="radio-frequency" class="digital fs100"></div>
                         <div>
                             <div id="radio-name">Nova FM</div>
                             <div id="radio-mhz">MHZ</div>
@@ -49,23 +48,21 @@
                                 <div id="radio-prev" class="fleft"></div>
                                 <div id="radio-playing" class="fleft">&nbsp;</div>
     <!--                             <div id="scrollingText">
-                                    <p>Oribital - Plump DJ's</p>                                
+                                    <p>Oribital - Plump DJ's</p>
                                 </div> -->
                                 <div id="radio-next" class="fleft"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div id="panel-tv" style="display: none;" class="blue panel">        
+                <div id="panel-tv" style="display: none;" class="blue panel">
                     <div id="screen-inner">
                         <div id="" class="digital fs100 tcenter">Media</div>
                         <div id="media-date" class="digital tcenter fs25"></div>
-                        <div id="media-clock" class="digital tcenter fs30"></div>                        
+                        <div id="media-clock" class="digital tcenter fs30"></div>
                     </div>
                 </div>
-
-                <div id="panel-mp3" style="display: none;" class="green panel">        
+                <div id="panel-mp3" style="display: none;" class="green panel">
                     <div id="screen-inner">
                         <div id="" class="digital fs80 tcenter">Music</div>
                         <div id="music-playing" class="tcenter fs14">&nbsp;</div>
@@ -80,50 +77,32 @@
                                     <li><a id="mp3-next" class="music-buttons">&nbsp;</a></li>
                                     <li><a id="mp3-shuffle" class="music-buttons">&nbsp;</a></li>
                                     <li><a id="mp3-playing" class="music-buttons">&nbsp;</a></li>
-                                </ul> 
-                            </div>  
-                      <!--   </div>   -->                                      
+                                </ul>
+                            </div>
+                      <!--   </div>   -->
                     </div>
                 </div>
 
             </div>
         </div>
-<!--         <div class="footer-container">
-            <footer class="wrapper">
-                <div id="controls-container">
-                    <div class="amp-slider-container pt20">
-                        <div id="vol-slider"></div>
-                    </div>
-                    <div class="amp-slider-container">
-                        <div id="bass-slider"></div>
-                    </div>
-                    <div class="amp-slider-container pb20">
-                        <div id="treble-slider"></div>
-                    </div>
-                </div>
-            </footer>
-        </div> -->
-
         <div class="footer-container">
             <footer class="wrapper">
                 <div id="controls-container">
-
-                    <div class="amp-knob-container">
-                        <div id="volume-knob" style="margin-top:20px; height:170px;">
-                            <input class="infinite" data-width="150" data-thickness=".5" data-fgColor="rgb(0, 85, 85);" data-bgColor="rgb(18, 170, 178);" data-displayInput="false" data-cursor=true>
-                            <div style="float:left;margin-top:20px;">
-                                <div class="ival" style="width:80px;text-align:center;font-size:50px;color:rgb(0, 85, 85);">0</div>
-                                <div class="idir" style="width:80px;text-align:center;font-size:50px;color:rgb(0, 85, 85);margin-top:15px;"></div>
-                            </div>
-                        </div>
+                    <div class="amp-slider-container pt20">
+                        <div id="vol-slider" class="noUiSlider"></div>
                     </div>
-
+                    <div class="amp-slider-container">
+                        <div id="bass-slider" class="noUiSlider"></div>
+                    </div>
+                    <div class="amp-slider-container pb20">
+                        <div id="treble-slider" class="noUiSlider"></div>
+                    </div>
                 </div>
             </footer>
-        </div>       
+        </div> 
         <script>window.jQuery || document.write('<script src="./assets/js/jquery-latest.pack.js"><\/script>')</script>
         <script src="./assets/js/jquery-ui.js"></script>
-        <script src="./assets/js/jquery.knob.js"></script>
+        <script src="./assets/js/jquery.nouislider.js"></script>
         <script src="./assets/js/jquery.loadmask.js"></script>
-        <script src="./assets/js/main.js"></script>       
+        <script src="./assets/js/main.js"></script>
 </body></html>
