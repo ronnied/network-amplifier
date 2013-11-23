@@ -1,4 +1,4 @@
-from ronniedAmp.displayHelper import DisplayHelper
+from amplifier.displayHelper import DisplayHelper
 
 ######################################
 #

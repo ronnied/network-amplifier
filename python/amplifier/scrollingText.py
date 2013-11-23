@@ -1,4 +1,4 @@
-from ronniedAmp.timer import Timer
+from amplifier.timer import Timer
 import collections
 import logging
 import threading

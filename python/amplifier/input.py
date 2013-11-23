@@ -1,5 +1,5 @@
 import wiringpi
-from ronniedAmp.toggleSwitch import ToggleSwitch
+from amplifier.toggleSwitch import ToggleSwitch
 import gaugette.rotary_encoder
 import threading
 from time import sleep

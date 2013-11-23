@@ -1,8 +1,8 @@
-from ronniedAmp.display import Display
-from ronniedAmp.pt2314 import PT2314
-from ronniedAmp.i2c import I2cInit
-from ronniedAmp.radio import Radio
-from ronniedAmp.mp3 import Mp3
+from amplifier.display import Display
+from amplifier.pt2314 import PT2314
+from amplifier.i2c import I2cInit
+from amplifier.radio import Radio
+from amplifier.mp3 import Mp3
 from time import sleep
 import json
 import os

@@ -1,12 +1,12 @@
-from ronniedAmp.lcd595 import HD44780_595
-from ronniedAmp.led import Led
-from ronniedAmp.displayHelper import DisplayHelper
-from ronniedAmp.volumeDisplay import VolumeDisplay
-from ronniedAmp.toneDisplay import ToneDisplay
-from ronniedAmp.mp3Display import Mp3Display
-from ronniedAmp.radioDisplay import RadioDisplay
-from ronniedAmp.timer import Timer
-from ronniedAmp.scrollingText import ScrollingText
+from amplifier.lcd595 import HD44780_595
+from amplifier.led import Led
+from amplifier.displayHelper import DisplayHelper
+from amplifier.volumeDisplay import VolumeDisplay
+from amplifier.toneDisplay import ToneDisplay
+from amplifier.mp3Display import Mp3Display
+from amplifier.radioDisplay import RadioDisplay
+from amplifier.timer import Timer
+from amplifier.scrollingText import ScrollingText
 #import logging
 import threading
 import wiringpi
@@ -355,7 +355,7 @@ class Display:
 
     def updateWelcomeStateBuffers(self):
       self.sTextLine1.setText("Master " + chr(246) + " Control")
-      self.sTextLine2.setText("v0.4 Ronald Diaz")
+      self.sTextLine2.setText("v0.5 Ronald Diaz")
 
     def updateShutdownStateBuffers(self):
       self.sTextLine1.setText("Shutting down...")

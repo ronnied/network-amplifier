@@ -1,6 +1,6 @@
 from twisted.web.resource import Resource
-from ronniedAmp.controller import Controller
-from ronniedAmp.input import Input
+from amplifier.controller import Controller
+from amplifier.input import Input
 
 # Control Server just delegates
 # messages interpreted to the
