@@ -1,0 +1,17 @@
+default = 0
+[stations]
+[[0]]
+index = 0
+frequency = 1053
+name = Station name goes here
+description = Station description goes here
+[[1]]
+index = 1
+frequency = 949
+name = Station B name goes here
+description = Station B description goes here
+[[2]]
+index = 2
+frequency = 1061
+name = Station C name goes here
+description = Station C description goes here

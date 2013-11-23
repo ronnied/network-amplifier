@@ -2,7 +2,7 @@
 # volume scales required
 # input is 0 -> 100
 # outputs are dB and # for LCD  
-class Volume():
+class VolumeDisplay():
   def __init__(self):
     self.vol15 = 0
     self.vol63 = -63

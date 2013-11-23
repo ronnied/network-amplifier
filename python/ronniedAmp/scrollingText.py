@@ -43,6 +43,7 @@ class ScrollingText():
   # cut [ 0 -> width-1 ] chars out of the textBUffer
   # and put them into the renderedBuffer
   def _updateBuffer(self):
+    #print self.renderedBuffer
     self.renderedBuffer = ""
     # fill the widthBuffer with [ 0 -> width-1 ]
     for i in range(0, self.width):
@@ -50,7 +51,7 @@ class ScrollingText():
                  
   # Threaded Worker    
   class Worker(threading.Thread):
-    def __init__(self, text = "This is a test scrolling text class.", width = 16, direction = True, scrolling = True, speed = 0.5, blinking = False, blinkSpeed = 0.25):
+    def __init__(self, text = "This is a test scrolling text class.", width = 16, direction = True, scrolling = True, speed = 0.2, blinking = False, blinkSpeed = 0.25):
       threading.Thread.__init__(self)
       self.lock = threading.Lock()
       self.sText = ScrollingText(text, width, direction)
@@ -59,13 +60,14 @@ class ScrollingText():
    
       # Timers
       self.scrollTimer = Timer(speed, scrolling)      
-      self.blinkTimer = Timer(blinkSpeed, False)
+      self.blinkTimer = Timer(blinkSpeed, blinking)
       self.blinkState = False
       
     def run(self):
-      while True:            
+      while True:        
         # are we currently scrolling?
-        if self.scrollTimer.isOn() == True:        
+        if self.scrollTimer.isOn() == True:
+          #print "scrolling!"
           # have we elapsed the scroll scrollTimer?
           if self.scrollTimer.elapsed() == True:                                
             #print "scroll scrollTimer elapsed!"

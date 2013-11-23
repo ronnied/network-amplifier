@@ -1,33 +1,42 @@
 ================================================================
-                   RonnieD's Network Amplifier
+                      Network Amplifier
 ================================================================
-
 
 Collection of tools used for my custom network amplifier.
 
-
 python/
-	network-enabled python web process allowing fine control
-	of all features of PT2314 i2c amplifier mixer via HTTP
+  network-enabled python web process allowing fine control
+  of all modules and features of the amplifier via HTTP.
+  Modules installed:
+    Audio - PT2314 i2c amplifier mixer 
+    Radio - si4703 FM Tuner controlled via i2c
+    MP3 - localhost 6600 connection to mpd daemon    
+
+html/
+  HTML / CSS / Javascript frontend controller via HTTP.
+  Hosted locally with an nginx server.
 
 android-app/
-	Android application used to control amplifier via HTTP
+  Android application used to control amplifier via HTTP
 
 android-widget/
-	Home screen widget used to control amplifier vua HTTP
+  Home screen widget used to control amplifier via HTTP
 
 node/
-	Node text processor used to control amplifier via HTTP
+  Node text processor used to control amplifier via HTTP
 
 
 ================================================================
-           RonnieD's Network Amplifier Python Library
+                Network Amplifier Python Library
 ================================================================
 
 A library for my custom amplifier hardware with the Raspberry Pi.
 
 Prerequisites
 =============
+python2.7
+ConfigObj
+wiringpi2
 wiringpi
 gaugette
 
@@ -35,9 +44,13 @@ Usage
 =====
 sudo python startServer.py
 
-runs the amplifier's web server
-and child controller on localhost, port 8241
+runs the amplifier's web server on localhost, port 8241
 
+Radio Station Setup
+===================
+
+rename config.radio.example -> config.radio
+and alter to suit your local radio stations
 
 ================================================================
-https://github.com/ronnied/
+https://github.com/ronnied/network-amplifier

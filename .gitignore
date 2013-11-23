@@ -3,3 +3,4 @@ python/.project
 python/.pydevproject
 python/ronniedAmp/build/*
 python/build/*
+config-radio

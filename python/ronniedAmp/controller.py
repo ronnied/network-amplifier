@@ -135,13 +135,13 @@ class Controller():
 
   def selectMp3(self):
     self.audio.selectChannel(1)
-    self.display.showMp3()
+    self.display.setMp3(self.mp3.getStatus())
     self.selectState = 1
     return self.getAll()
 
   def selectRadio(self):
     self.audio.selectChannel(2) # route audio input
-    self.display.showRadio()    
+    self.display.setRadio(self.radio.getStation())
     self.selectState = 2
     return self.getAll()
 
@@ -254,10 +254,12 @@ class Controller():
 
   def radioStationPrevious(self):
     self.radio.prevStation()
+    self.display.setRadio(self.radio.getStation())
     return self.getAll()
 
   def radioStationNext(self):
     self.radio.nextStation()
+    self.display.setRadio(self.radio.getStation())
     return self.getAll()
 
   def radioStationIndex(self, index):

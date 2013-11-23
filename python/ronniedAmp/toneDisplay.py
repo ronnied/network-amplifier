@@ -9,7 +9,7 @@
 #
 # (-14 -> 14) -> + 14 / 2 = (0->14)
 # 
-class Tone():
+class ToneDisplay():
   def __init__(self):
     self.bass = 0
     self.treble = 0
