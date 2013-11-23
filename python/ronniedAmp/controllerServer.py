@@ -93,13 +93,17 @@ class ControllerServer(Resource):
         treble = 0
       return self.controller.trebleSet(treble)
     # Radio
-    elif sw == "radioStation":
+    elif sw == "prevRadioStation":
+      return self.controller.radioStationPrevious()
+    elif sw == "nextRadioStation":
+      return self.controller.radioStationNext()
+    elif sw == "radioStationIndex":
       station = 0
       try:
         station = seg[3]
       except ValueError:
         station = 0
-      return self.controller.radioStationSet(station)
+      return self.controller.radioStationIndex(station)
 
     # Granular commands
     # 

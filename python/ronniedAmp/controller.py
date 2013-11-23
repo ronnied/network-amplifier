@@ -252,8 +252,16 @@ class Controller():
     self.display.setTone(self.bass, self.treble)
     return self.getAll()
 
-  def radioStationSet(self, station):
-    self.radio.setStation(station)
+  def radioStationPrevious(self):
+    self.radio.prevStation()
+    return self.getAll()
+
+  def radioStationNext(self):
+    self.radio.nextStation()
+    return self.getAll()
+
+  def radioStationIndex(self, index):
+    self.radio.setStationIndex(index)
     return self.getAll()
 
   # Getters
@@ -279,7 +287,7 @@ class Controller():
             'select'  : self.selectState,
             'bass'    : self.bass,
             'treble'  : self.treble,
-            'radio'   : { 'station' : self.radio.station },
+            'radio'   : self.radio.getStation(),
             'mp3'     : self.mp3.getStatus()
            }
     return json.dumps(data)

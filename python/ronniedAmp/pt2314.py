@@ -122,7 +122,7 @@ class PT2314:
     self._updateTreble()
     
   def _sendByte(self, b):
-    print "data: %x" % b
+    #print "data: %x" % b
     try:
       self.i2c.write_byte(self.i2cAddress, b) # send data via i2c    
     except:

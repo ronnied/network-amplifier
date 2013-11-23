@@ -218,7 +218,7 @@ $( document ).ready(function() {
           // Audio
           amplifier.audio.update(json);
           // Radio
-          amplifier.radio.station = json.radio.station;
+          amplifier.radio.update(json);
           // Mp3
           amplifier.mp3.update(json);
       },
@@ -383,7 +383,7 @@ $( document ).ready(function() {
       },
       selectRadio: function() {
         $.get(amplifier.network.url + "set/selectRadio", function(data) {            
-            amplifier.radio.updatePanel(amplifier.radio.stations, data);
+            amplifier.radio.updatePanel();
             amplifier.updateGui("radio");
         });
       },
@@ -476,98 +476,31 @@ $( document ).ready(function() {
        * Radio Object
        */
       radio: {
-        volume:0, // set a default volume
-        station:876, // set a default station,
-        stationIdx:0,
-        data:"",
-        stations:[
-                  {"name":"Vision FM",// Mhz/87.8 Mhz/88.0 Mhz (Various suburbs) Vision FM
-                   "freq":"876"}, //"88.0 Mhz (Brisbane CBD and Moreton Island)                 
-                  {"name":"SBS Radio",
-                   "freq":"933"}, // Mhz SBS Radio (international languages)
-                  {"name":"River",
-                   "freq":"949"},// Mhz River 94.9
-                  {"name":"Family FM",
-                   "freq":"965"}, // Mhz 96five Family FM
-                  {"name":"FM Mix",
-                   "freq":"973"}, // Mhz 97.3 FM MIX
-                  {"name":"Ethnic",
-                   "freq":"981"}, // Mhz 4EB (ethnic community radio)
-                  {"name":"Indigenous",
-                   "freq":"989"}, // Mhz 98.9 FM (indigenous community radio)
-                  {"name":"Bay FM",
-                   "freq":"1003"}, // Mhz Bay FM
-                  {"name":"101.1 FM",
-                   "freq":"1011"}, // Mhz 101.1 FM
-                  {"name":"4ZZZ",
-                   "freq":"1021"}, // Mhz 4ZZZ
-                  {"name":"4MBS",
-                   "freq":"1037"}, // Mhz 4MBS
-                  {"name": "Triple M",
-                   "freq":"1045"}, // Mhz Triple M
-                  {"name":"B105 FM",
-                   "freq":"1053"}, // Mhz B105 FM
-                  {"name":"Classic FM",
-                   "freq":"1061"}, // Mhz ABC Classic FM
-                  {"name":"Nova FM",
-                   "freq":"1069"}, // Mhz Nova 106.9
-                  {"name":"Triple J",
-                   "freq":"1077"} // Mhz Triple J
-                ],
-        getNameFromFrequency: function(freq) {
-          for(var i=0; i<this.stations.length; i++) {
-            if(this.stations[i].freq == freq) {
-              return this.stations[i].name;
-            }
-          }
-        },
-        getIdxFromFrequency: function(freq) {
-          for(var i=0; i<this.stations.length; i++) {
-            if(this.stations[i].freq == freq) {
-              return i;
-            }
-          }
-        },
-        prev: function(){
-          // negate counter
-          this.stationIdx--;
-          if(this.stationIdx<0){
-            this.stationIdx=this.stations.length-1;
-          }
-          return this.setByIndex(this.stationIdx);
-        },
-        next: function(){
-          // increment counter
-          this.stationIdx++;
-          if(this.stationIdx>=this.stations.length) {
-            this.stationIdx=0;
-          }
-          return this.setByIndex(this.stationIdx);
-        },
-        setByFrequency: function(freq) {
-          amplifier.radio.stationIdx = amplifier.radio.set
-          $.get(amplifier.network.url + "set/radioStation/" + freq, function(data) {
-            amplifier.radio.station = data.radio.station;
+        station: {},        
+        prev: function() {
+          $.get(amplifier.network.url + "set/prevRadioStation/", function(data) {
+            amplifier.radio.station = data.radio;
             amplifier.radio.updatePanel();
-          });   
+          });
         },
-        setByIndex: function(index) {
-          amplifier.radio.stationIdx = index;
-          $.get(amplifier.network.url + "set/radioStation/" + amplifier.radio.stations[index].freq, function(data){
-            amplifier.radio.station = data.radio.station;
+        next: function() {          
+          $.get(amplifier.network.url + "set/nextRadioStation/", function(data) {
+            amplifier.radio.station = data.radio;
+            amplifier.radio.updatePanel();
+          });
+        },
+        setByIndex: function(index) {          
+          $.get(amplifier.network.url + "set/radioStationIndex/" + index, function(data) {
+            amplifier.radio.station = data.radio;
             amplifier.radio.updatePanel();
           });
         },
         updatePanel: function() {
-          $("#radio-frequency").text(parseFloat(amplifier.radio.station) / 10);
-          // Reverse lookup name of station from frequency
-          for(var i=0; i< amplifier.radio.stations.length; i++) {
-            if(amplifier.radio.stations[i].freq == amplifier.radio.station) {
-              $("#radio-name").text(amplifier.radio.stations[i].name);
-              break;
-            }
-          }
-          // rbds scrolling text
+          $("#radio-frequency").text(parseFloat(amplifier.radio.station.frequency) / 10);
+          $("#radio-name").text(amplifier.radio.station.name);
+         },
+        update: function(data) {
+          amplifier.radio.station = data.radio;
         }
       },
 

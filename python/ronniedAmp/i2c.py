@@ -57,7 +57,7 @@ class I2cInit:
     s0 = 0b00000000000000000000100100000000
     b0 = reg0 & m0
     if b0 <> s0:
-        print "reg0 I2C configuration not correct. Updating."
+        #print "reg0 I2C configuration not correct. Updating."
         reg0 = (reg0 & ~m0) | s0
         m.seek(0)
         m.write(self._32bittostr_(reg0))
@@ -67,7 +67,7 @@ class I2cInit:
     s2 = 0b00100100000000000000000000000000
     b2 = reg2 & m2
     if b2 <> s2:
-        print "reg2 I2C configuration not correct. Updating."
+        #print "reg2 I2C configuration not correct. Updating."
         reg2 = (reg2 & ~m2) | s2
         m.seek(8)
         m.write(self._32bittostr_(reg2))
