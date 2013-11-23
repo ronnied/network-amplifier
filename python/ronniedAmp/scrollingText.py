@@ -1,3 +1,11 @@
+from ronniedAmp.timer import Timer
+import collections
+import logging
+import threading
+import time
+logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
+
+######################################
 #
 # Scrolling Text Buffer Class
 #
@@ -7,13 +15,6 @@
 # Added Timer class reference
 # Added Blinking state
 #
-from ronniedAmp.timer import Timer
-import collections
-import logging
-import threading
-import time
-logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
-
 class ScrollingText():
   def __init__(self, text, width, direction = True):
     self.width = width

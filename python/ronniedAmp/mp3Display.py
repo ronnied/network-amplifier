@@ -20,8 +20,7 @@ class Mp3Display():
     return self.artist + " - " + self.album + " . "
 
   def set(self, mp3):
-    print "!!!!!MP3!!!!!"
-    print mp3
+    #print mp3
     try:
       self.album = mp3['album']
     except Exception, e:

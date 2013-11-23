@@ -3,9 +3,6 @@ import time
 import RPi.GPIO as GPIO
 from configobj import ConfigObj
 
-#          B105.3FM        <- centered text
-# freq + description scrolling    
-
 ######################################
 #
 # Class for controlling si470x via i2c 
@@ -132,38 +129,3 @@ class Radio:
 
     # Set default station
     self._updateStation()
-
-# [
-# {"name":"Vision FM",// Mhz/87.8 Mhz/88.0 Mhz (Various suburbs) Vision FM
-#  "freq":"876"}, //"88.0 Mhz (Brisbane CBD and Moreton Island)                 
-# {"name":"SBS Radio",
-#  "freq":"933"}, // Mhz SBS Radio (international languages)
-# {"name":"River",
-#  "freq":"949"},// Mhz River 94.9
-# {"name":"Family FM",
-#  "freq":"965"}, // Mhz 96five Family FM
-# {"name":"FM Mix",
-#  "freq":"973"}, // Mhz 97.3 FM MIX
-# {"name":"Ethnic",
-#  "freq":"981"}, // Mhz 4EB (ethnic community radio)
-# {"name":"Indigenous",
-#  "freq":"989"}, // Mhz 98.9 FM (indigenous community radio)
-# {"name":"Bay FM",
-#  "freq":"1003"}, // Mhz Bay FM
-# {"name":"101.1 FM",
-#  "freq":"1011"}, // Mhz 101.1 FM
-# {"name":"4ZZZ",
-#  "freq":"1021"}, // Mhz 4ZZZ
-# {"name":"4MBS",
-#  "freq":"1037"}, // Mhz 4MBS
-# {"name": "Triple M",
-#  "freq":"1045"}, // Mhz Triple M
-# {"name":"B105 FM",
-#  "freq":"1053"}, // Mhz B105 FM
-# {"name":"Classic FM",
-#  "freq":"1061"}, // Mhz ABC Classic FM
-# {"name":"Nova FM",
-#  "freq":"1069"}, // Mhz Nova 106.9
-# {"name":"Triple J",
-#  "freq":"1077"} // Mhz Triple J
-# ],

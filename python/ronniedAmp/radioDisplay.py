@@ -21,8 +21,7 @@ class RadioDisplay():
     return self.description + " - "
 
   def set(self, station):
-    print station
-    print "!!!!!!!!!!!!!!!"
+    #print station
     self.index = station['index']
     self.name = station['name']
     self.frequency = station['frequency']
