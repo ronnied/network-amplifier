@@ -1,4 +1,4 @@
-from ronniedAmp.controllerServer import ControllerServer
+from amplifier.controllerServer import ControllerServer
 from twisted.internet import reactor
 from twisted.web.server import Site
 

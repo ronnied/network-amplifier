@@ -1,12 +1,12 @@
-#from ronniedAmp.controller import Controller
+#from amplifier.controller import Controller
 #c = Controller()
 #print c
 #c.powerOn()
 
-#from ronniedAmp.scrollingText import ScrollingText
+#from amplifier.scrollingText import ScrollingText
 #from time import sleep
 #
-#from ronniedAmp.lcd import HD44780
+#from amplifier.lcd import HD44780
 #
 #l = HD44780()
 #s = ScrollingText.Worker()
@@ -25,7 +25,7 @@
 #d.startScrollLine1()
 
     
-from ronniedAmp.display import Display
+from amplifier.display import Display
 from time import sleep
 
 d = Display.Worker()

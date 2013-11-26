@@ -69,8 +69,8 @@ class Display:
       self.disp = Display(gpio)
       
       # Create text buffers but don't scroll or blink just yet
-      self.sTextLine1 = ScrollingText.Worker("", 16, True, False, 0.2, False, 0.5)
-      self.sTextLine2 = ScrollingText.Worker("", 16, True, False, 0.2, False, 0.5)
+      self.sTextLine1 = ScrollingText.Worker("", 16, True, False, 0.8, False, 0.5)
+      self.sTextLine2 = ScrollingText.Worker("", 16, True, False, 0.8, False, 0.5)
       self.sTextLine1.start()
       self.sTextLine2.start()
       

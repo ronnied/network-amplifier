@@ -1,6 +1,5 @@
 import time
-#from ronniedAmp.display import Display
-from ronniedAmp.scrollingText import ScrollingText
+from amplifier.scrollingText import ScrollingText
 
 s = ScrollingText.Worker()
 s.start()

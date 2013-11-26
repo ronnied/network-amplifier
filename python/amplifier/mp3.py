@@ -7,17 +7,20 @@ import time
 #
 # Ronald Diaz ronald@ronalddiaz.net
 #
-# Todo
 # sets: no delay, send request to mpd daemon
 # gets: run worker to cache mpd daemon data
 # at a regular timely rate, return cache
 #
 class Mp3:
   def __init__(self):
-    self.currentsong = False
-    self.mpd = False    
+    self.currentStatus = False
+    self.mpd = False
     self.connect()
-          
+    self.timer = 0 # always expired to start with
+    self.timerLimit = 7500 # in milliseconds
+    self.currentTime = lambda: int((round(time.time() * 1000)))
+    self.cachedStatus = False
+
   # High Level Commands
   def connect(self):
     try:
@@ -27,11 +30,27 @@ class Mp3:
     except:
       self.mpd = False
 
-  def getStatus(self):  
+  def getStatus(self):
     if self.mpd == False:
-      return self.currentsong
+      return self.currentStatus
+    if self._hasCacheExpired() == True:
+      return self._getMPDStatus()
+    else:
+      return self.currentStatus
+
+  def _getMPDStatus(self):
     try:
-      self.currentsong = self.mpd.currentsong()
-    except:      
+      self.currentStatus = self.mpd.currentsong()
+    except:
       return False
-    return self.currentsong      
+    return self.currentStatus
+
+  def _timerReset(self):
+    self.timer = self.currentTime()
+
+  def _hasCacheExpired(self):
+    if (self.currentTime() - self.timer) > self.timerLimit:
+      self._timerReset()
+      return True
+    else:
+      return False
