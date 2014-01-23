@@ -288,7 +288,7 @@ class Display:
       self.selectLedTimer.start()    
       self.sTextLine1.setText(self.disp.radio.getLine1())
       self.sTextLine2.setText(self.disp.radio.getLine2())
-      self.sTextLine2.startScroll()    
+      #self.sTextLine2.startScroll()    
       self.prevState = self.state
       self.state = self.states.STATE_RADIO
       self.lastMenu = self.state
