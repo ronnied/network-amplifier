@@ -301,7 +301,7 @@ $( document ).ready(function() {
        * Network Object
        */
       network: {
-        url: "http://192.168.1.7/",
+        url: "http://" + window.location.hostname + "/",
         timer: null,
         delay: 10000,
         init: function() {
