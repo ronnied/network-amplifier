@@ -25,6 +25,7 @@ class Mp3:
   def connect(self):
     try:
       self.mpd = mpd.MPDClient()
+      self.mpd.timeout = 10
       self.mpd.connect("localhost", 6600)
       # Check response from port is correct: OK MPD 0.17.0
     except:
