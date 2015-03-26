@@ -368,13 +368,13 @@ $( document ).ready(function() {
       radio: {
         station: {},        
         prev: function() {
-          $.get(amplifier.network.url + "set/prevRadioStation/", function(data) {
+          $.get(amplifier.network.url + "set/radioStationNext/", function(data) {
             amplifier.radio.station = data.radio;
             amplifier.radio.updatePanel();
           });
         },
         next: function() {          
-          $.get(amplifier.network.url + "set/nextRadioStation/", function(data) {
+          $.get(amplifier.network.url + "set/radioStationNext/", function(data) {
             amplifier.radio.station = data.radio;
             amplifier.radio.updatePanel();
           });
@@ -414,30 +414,35 @@ $( document ).ready(function() {
         list: function() {
 
         },
+        toggleStr: function(bool) {
+          if(bool == false)
+            return "Off"
+          return "On"
+        },
         repeat: function() {
           amplifier.mp3.repeatState = !amplifier.mp3.repeatState;
-          $.get(amplifier.network.url + "mpd/index.php?cmd=repeat&on=" + amplifier.mp3.repeatState, function(data) {
+          $.get(amplifier.network.url + "set/mp3Repeat" + amplifier.mp3.toggleStr(amplifier.mp3.repeatState), function(data) {
             amplifier.mp3.updatePanel(data);
           });
         },
         prev: function() {
-          $.get(amplifier.network.url + "mpd/index.php?cmd=prevSong", function(data) {
+          $.get(amplifier.network.url + "set/mp3Previous", function(data) {
             amplifier.mp3.updatePanel(data);
           });
         },
         play: function() {
-          $.get(amplifier.network.url + "mpd/index.php?cmd=play", function(data) {
+          $.get(amplifier.network.url + "set/mp3Play", function(data) {
             amplifier.mp3.updatePanel(data);
           });
         },
         next: function() {
-          $.get(amplifier.network.url + "mpd/index.php?cmd=nextSong", function(data) {
+          $.get(amplifier.network.url + "set/mp3Next", function(data) {
             amplifier.mp3.updatePanel(data);
           });
         },
         shuffle: function() {
           amplifier.mp3.shuffleState = !amplifier.mp3.shuffleState;
-          $.get(amplifier.network.url + "mpd/index.php?cmd=shuffle&on=" + amplifier.mp3.shuffleState, function(data) {
+          $.get(amplifier.network.url + "set/mp3Shuffle" + amplifier.mp3.toggleStr(amplifier.mp3.shuffleState), function(data) {
             amplifier.mp3.updatePanel(data);
           });
         },

@@ -136,27 +136,3 @@ class HD44780:
               self.cmd(self.l2)
           else:
               self.chr(ord(char))
-
-#  def sendString(self, message):
-#    message = message.ljust(self.width," ")  
-#    for i in range(self.width):
-#      self.byte(ord(message[i]), self.chr)
-#
-#  def line1(self, message):
-#    self.byte(0x80, False)
-#    self.sendString(message)
-#
-#  def line2(self, message):
-#    self.byte(0xC0, False)
-#    self.sendString(message)
-#
-#  def lines(self, line1, line2):
-#    self.line1(line1)
-#    self.line2(line2)
-
-#if __name__ == '__main__':
-#
-#    lcd = HD44780()
-#    print lcd
-#    sleep(1)
-#    lcd.message("Raspberry Pi\n16x2 LCD 44780!")

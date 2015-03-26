@@ -46,9 +46,3 @@ class HD44780_595(HD44780) :
     self.pin_d5 = self.sRegBase + 2 # d5
     self.pin_d6 = self.sRegBase + 3 # d6
     self.pin_d7 = self.sRegBase + 4 # d7
-    
-# if __name__ == '__main__':
-#      lcd = HD44780_595()
-#      print lcd
-#      sleep(1)
-#      lcd.message("Raspberry Pi\n16x2 LCD 44780!")

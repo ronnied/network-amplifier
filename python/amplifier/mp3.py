@@ -20,13 +20,14 @@ class Mp3:
     self.timerLimit = 7500 # in milliseconds
     self.currentTime = lambda: int((round(time.time() * 1000)))
     self.cachedStatus = False
-    self.pause = True
+    self.pauseState = True
 
   # High Level Commands
   def connect(self):
     try:
       self.mpd = mpd.MPDClient()
       self.mpd.timeout = 10
+      self.mpd.use_unicode = False
       self.mpd.connect("localhost", 6600)
       # Check response from port is correct: OK MPD 0.17.0
     except:
@@ -53,12 +54,12 @@ class Mp3:
   def pause(self):
     if self.mpd == False:
       return self.currentStatus
-    if self.pause == True:
-      self.mpd.pause(0)
-      self.pause = False
-    else:
+    if self.pauseState == True:
       self.mpd.pause(1)
-      self.pause = True
+      self.pauseState = False
+    else:
+      self.mpd.pause(0)
+      self.pauseState = True
   
   def stop(self):
     if self.mpd == False:

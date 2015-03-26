@@ -101,8 +101,45 @@ class Input:
       return self.controller.getStateString()
     return self.networkRequest("get/stateString")
 
+  def radioStationNext(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.radioStationNext()
+    return self.networkRequest("set/radioStationNext")
+ 
+  def radioStationPrevious(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.radioStationPrevious()
+    return self.networkRequest("set/radioStationPrevious")
+ 
+  def mp3Previous(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3Previous()
+    return self.networkRequest("set/mp3Previous")
+ 
+  def mp3Next(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3Next()
+    return self.networkRequest("set/mp3Next")
+ 
+  def mp3Stop(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3Stop()
+    return self.networkRequest("set/mp3Stop")
+ 
+  def mp3Play(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3Play()
+    return self.networkRequest("set/mp3Play")
+  
+  def mp3Pause(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3Pause()
+    return self.networkRequest("set/mp3Pause")
+ 
   def handleLircCode(self, code):
     print "got code: " + str(code)
+    if code[0] == 'mute':
+      return self.muteToggle()
     if code[0] == 'up':
       return self.volumeUp()
     if code[0] == 'down':
@@ -122,17 +159,17 @@ class Input:
     if code[0] == 'pause' and self.getStateString() == "mp3":
       return self.mp3Pause()
     if code[0] == 'power':
-      return self.toggleMute()
+      pass
     if code[0] == 'back':
       selected = self.getStateString()
       if selected == "radio":
-        return self.radioPreviousStation()
+        return self.radioStationPrevious()
       if selected == "mp3":
         return self.mp3Previous()
     if code[0] == 'forward':
       selected = self.getStateString()
       if selected == "radio":
-        return self.radioNextStation()
+        return self.radioStationNext()
       if selected == "mp3":
         return self.mp3Next()
         

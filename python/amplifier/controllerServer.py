@@ -42,8 +42,6 @@ class ControllerServer(Resource):
     sw = seg[2]
     #print sw
     
-    # High level commands
-    # 
     if sw == "muteToggle":
       return self.controller.muteToggle()
     elif sw == "muteOn":
@@ -93,9 +91,9 @@ class ControllerServer(Resource):
         treble = 0
       return self.controller.trebleSet(treble)
     # Radio
-    elif sw == "prevRadioStation":
+    elif sw == "radioStationPrevious":
       return self.controller.radioStationPrevious()
-    elif sw == "nextRadioStation":
+    elif sw == "radioStationNext":
       return self.controller.radioStationNext()
     elif sw == "radioStationIndex":
       station = 0
@@ -104,9 +102,17 @@ class ControllerServer(Resource):
       except ValueError:
         station = 0
       return self.controller.radioStationIndex(station)
-
-    # Granular commands
-    # 
+    # Mp3
+    elif sw == "mp3Next":
+      return self.controller.mp3Next()
+    elif sw == "mp3Previous":
+      return self.controller.mp3Previous()
+    elif sw == "mp3Stop":
+      return self.controller.mp3Stop()
+    elif sw == "mp3Play":
+      return self.controller.mp3Play()
+    elif sw == "mp3Pause":
+      return self.controller.mp3Pause()
     else:
       error = "Unknown command: " + str(sw)
       #print error
@@ -125,6 +131,8 @@ class ControllerServer(Resource):
       return self.controller.getAll()
     elif sw == "status":
       return self.controller.getAll()
+    elif sw == "stateString":
+      return self.controller.getStateString()
     else:
       msg = "not implemented"
       #print msg
