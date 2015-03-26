@@ -20,6 +20,7 @@ class Mp3:
     self.timerLimit = 7500 # in milliseconds
     self.currentTime = lambda: int((round(time.time() * 1000)))
     self.cachedStatus = False
+    self.pause = True
 
   # High Level Commands
   def connect(self):
@@ -38,6 +39,36 @@ class Mp3:
       return self._getMPDStatus()
     else:
       return self.currentStatus
+
+  def previous(self):
+    if self.mpd == False:
+      return self.currentStatus
+    self.mpd.previous()
+
+  def next(self):
+    if self.mpd == False:
+      return self.currentStatus
+    self.mpd.next()
+
+  def pause(self):
+    if self.mpd == False:
+      return self.currentStatus
+    if self.pause == True:
+      self.mpd.pause(0)
+      self.pause = False
+    else:
+      self.mpd.pause(1)
+      self.pause = True
+  
+  def stop(self):
+    if self.mpd == False:
+      return self.currentStatus
+    self.mpd.stop()
+
+  def play(self):
+    if self.mpd == False:
+      return self.currentStatus
+    self.mpd.play()
 
   def _getMPDStatus(self):
     try:

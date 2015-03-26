@@ -61,7 +61,7 @@ class Controller():
     # Amplifier States
     self.muteState = False    
     self.powerState = False
-    self.selectState = 0 # 0 -> 2    
+    self.selectState = 0 # 0 -> 3    
     
     # Volume 0->100
     self.volume = 50
@@ -201,7 +201,7 @@ class Controller():
   def volumeUp(self):
     self.volume = self.volumeValidate(self.volume + 1)
     self.audio.setVolume(self.volumei2c)
-    self.display.volumeSetLcd(self.volume)
+    self.display.setVolume(self.volume)
     return self.getAll()
 
   def volumeDown(self):
@@ -252,6 +252,8 @@ class Controller():
     self.display.setTone(self.bass, self.treble)
     return self.getAll()
 
+  # Radio Methods
+  #
   def radioStationPrevious(self):
     self.radio.prevStation()
     self.display.setRadio(self.radio.getStation())
@@ -266,24 +268,52 @@ class Controller():
     self.radio.setStationIndex(index)
     return self.getAll()
 
+  # Mp3 Methods
+  #
+  def mp3Previous(self):
+    self.mp3.previous()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3Next(self):
+    self.mp3.next()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3Pause(self):
+    self.mp3.pause()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3Stop(self):
+    self.mp3.stop()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3Play(self):
+    self.mp3.play()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
   # Getters
+  #
   def volumeGet(self):
     return self.volume
 
-  def getStateString(self, state):
-    if state==0:
+  def getStateString(self):
+    if self.selectState==0:
       return 'media'
-    elif state==1:
+    elif self.selectState==1:
       return 'mp3'
-    elif state==2:
+    elif self.selectState==2:
       return 'radio'
-    elif state==3:
+    elif self.selectState==3:
       return 'aux'
 
   def getAll(self):    
     data = {
             'power'   : self.powerState,
-            'state'   : self.getStateString(self.selectState),
+            'state'   : self.getStateString(),
             'volume'  : self.volume,
             'mute'    : self.muteState,
             'select'  : self.selectState,
