@@ -137,7 +137,7 @@ class Input:
     return self.networkRequest("set/mp3Pause")
  
   def handleLircCode(self, code):
-    print "got code: " + str(code)
+    #print "got code: " + str(code)
     if code[0] == 'mute':
       return self.muteToggle()
     if code[0] == 'up':
