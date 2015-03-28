@@ -368,7 +368,7 @@ $( document ).ready(function() {
       radio: {
         station: {},        
         prev: function() {
-          $.get(amplifier.network.url + "set/radioStationNext/", function(data) {
+          $.get(amplifier.network.url + "set/radioStationPrevious/", function(data) {
             amplifier.radio.station = data.radio;
             amplifier.radio.updatePanel();
           });
