@@ -11,6 +11,7 @@ python/
     Audio - PT2314 i2c amplifier mixer 
     Radio - si4703 FM Tuner controlled via i2c
     MP3 - localhost 6600 connection to mpd daemon    
+    Lirc - lirc daemon for ir remote control
 
 html/
   HTML / CSS / Javascript frontend controller via HTTP.
@@ -39,6 +40,13 @@ ConfigObj
 wiringpi2
 wiringpi
 gaugette
+httplib2
+RPi.GPIO
+six
+smbus
+Twisted
+python-mpd2
+python-lirc
 
 Usage
 =====

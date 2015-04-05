@@ -12,7 +12,8 @@ import os
 # Accepts messages that affect the state of the system
 #
 # web server -> incoming
-# display server <- outgoing
+# input thread -> incoming
+# display thread <- outgoing
 # i2cAmplifier <- outgoing
 # i2cRadio <- outgoing
 # relay module <- outgoing (todo)
@@ -252,6 +253,18 @@ class Controller():
     self.display.setTone(self.bass, self.treble)
     return self.getAll()
 
+  def bassUp(self):
+    return self.bassSet(self.bass + 2)
+
+  def bassDown(self):
+    return self.bassSet(self.bass - 2)
+
+  def trebleUp(self):
+    return self.trebleSet(self.treble + 2)
+
+  def trebleDown(self):
+    return self.trebleSet(self.treble - 2)
+
   # Radio Methods
   #
   def radioStationPrevious(self):
@@ -292,6 +305,16 @@ class Controller():
 
   def mp3Play(self):
     self.mp3.play()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3SeekForward(self):
+    self.mp3.seekForward()
+    self.display.setMp3(self.mp3.getStatus())
+    return self.getAll()
+
+  def mp3SeekBackward(self):
+    self.mp3.seekBackward()
     self.display.setMp3(self.mp3.getStatus())
     return self.getAll()
 

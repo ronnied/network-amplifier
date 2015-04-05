@@ -3,6 +3,8 @@ import collections
 import logging
 import threading
 import time
+#from unidecode import unidecode
+#import unicodedata
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
 ######################################
@@ -14,6 +16,7 @@ logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-
 #
 # Added Timer class reference
 # Added Blinking state
+# Adding Transliterate...
 #
 class ScrollingText():
   def __init__(self, text, width, direction = True):
@@ -27,10 +30,15 @@ class ScrollingText():
     # fill the text to at least the width size
     if len(text) < self.width:      
       text = text.ljust(self.width, " ")            
+    #text = self.transliterate(text)
     self.textBuffer = collections.deque(text)
     # fill the renderedBuffer
     self._updateBuffer()
-        
+
+  #def transliterate(self, s):
+    #return unicodedata.normalize('NFKD', s).encode('ascii','ignore')
+    #return unidecode(s.encode('UTF-8'))        
+
   def getText(self):
     return self.renderedBuffer              
   

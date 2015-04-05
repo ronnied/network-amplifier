@@ -136,8 +136,38 @@ class Input:
       return self.controller.mp3Pause()
     return self.networkRequest("set/mp3Pause")
  
+  def mp3SeekForward(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3SeekForward()
+    return self.networkRequest("set/mp3SeekForward")
+
+  def mp3SeekBackward(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.mp3SeekBackward()
+    return self.networkRequest("set/mp3SeekBackward")
+
+  def bassDown(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.bassDown()
+    return self.networkRequest("set/bassDown")
+
+  def bassUp(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.bassUp()
+    return self.networkRequest("set/bassUp")
+
+  def trebleDown(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.trebleDown()
+    return self.networkRequest("set/trebleDown")
+
+  def trebleUp(self):
+    if self.client == self.CONTROLLER:
+      return self.controller.trebleUp()
+    return self.networkRequest("set/trebleUp")
+
   def handleLircCode(self, code):
-    #print "got code: " + str(code)
+    print "got code: " + str(code)
     if code[0] == 'mute':
       return self.muteToggle()
     if code[0] == 'up':
@@ -158,6 +188,10 @@ class Input:
       return self.mp3Play()
     if code[0] == 'pause' and self.getStateString() == "mp3":
       return self.mp3Pause()
+    if code[0] == 'seekForward':
+      return self.mp3SeekForward()
+    if code[0] == 'seekBackward':
+      return self.mp3SeekBackward()
     if code[0] == 'power':
       pass
     if code[0] == 'back':
@@ -172,8 +206,16 @@ class Input:
         return self.radioStationNext()
       if selected == "mp3":
         return self.mp3Next()
-        
-  # Threaded Worker    
+    if code[0] == 'bassDown':
+      return self.bassDown()
+    if code[0] == 'bassUp':
+      return self.bassUp()
+    if code[0] == 'trebleDown':
+      return self.trebleDown()
+    if code[0] == 'trebleUp':
+      return self.trebleUp()
+
+  # Threaded Worker
   class Worker(threading.Thread):
     # cache prev state
     # signal on change state

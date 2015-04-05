@@ -71,6 +71,12 @@ class Mp3:
       return self.currentStatus
     self.mpd.play()
 
+  def seekForward(self):
+    self.mpd.seekcur("+5")
+
+  def seekBackward(self):
+    self.mpd.seekcur("-5")
+
   def _getMPDStatus(self):
     try:
       self.currentStatus = self.mpd.currentsong()

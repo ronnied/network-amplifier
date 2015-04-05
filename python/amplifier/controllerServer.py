@@ -76,6 +76,15 @@ class ControllerServer(Resource):
       return self.controller.powerOn()
     elif sw == "powerOff":
       return self.controller.powerOff()
+    # Tone controls
+    elif sw == "bassUp":
+      return self.controller.bassUp()
+    elif sw == "bassDown":
+      return self.controller.bassDown()
+    elif sw == "trebleUp":
+      return self.controller.trebleUp()
+    elif sw == "trebleDown":
+      return self.controller.trebleDown()
     elif sw == "bass":
       bass = 0
       try:
@@ -113,6 +122,10 @@ class ControllerServer(Resource):
       return self.controller.mp3Play()
     elif sw == "mp3Pause":
       return self.controller.mp3Pause()
+    elif sw == "mp3SeekForward":
+      return self.controller.mp3SeekForward()
+    elif sw == "mp3SeekBackward":
+      return self.controller.mp3SeekBackward()
     else:
       error = "Unknown command: " + str(sw)
       #print error
