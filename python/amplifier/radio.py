@@ -12,11 +12,13 @@ from configobj import ConfigObj
 #
 class Radio:
   def __init__(self):
-    try:
-      # open Linux device /dev/i2c-1
-      self.i2c = smbus.SMBus(1)
-    except:
-      pass
+    if False:
+      try:
+        # open Linux device /dev/i2c-1
+        self.i2c = smbus.SMBus(1)
+      except:
+        self.i2c = None
+    self.i2c = None
     self.i2cAddress = 0x10 # address of SI4703
     self.stationIdx = 0    # 
     self.station = {}      # current station    
@@ -78,6 +80,8 @@ class Radio:
     self._sendByte(self.volume)
 
   def _updateStation(self):
+    if self.i2c == None:
+      return
     #print "Set Station: ", self.station
     nc = int(self.station['frequency'])
     nc *= 10
@@ -95,6 +99,8 @@ class Radio:
     #print reg2  
 
   def _reset(self):
+    if self.i2c == None:
+      return
     GPIO.setmode(GPIO.BCM) 
     GPIO.setwarnings(False)
     GPIO.setup(23, GPIO.OUT) 

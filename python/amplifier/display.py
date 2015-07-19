@@ -47,6 +47,8 @@ class Display:
 
     # Mp3
     self.mp3 = Mp3Display()
+    self.mp3Line1 = ""
+    self.mp3Line2 = ""
 
     # Radio
     self.radio = RadioDisplay()
@@ -281,6 +283,8 @@ class Display:
       self.prevState = self.state
       self.state = self.states.STATE_MP3
       self.lastMenu = self.state
+      self.mp3Line1 = self.disp.mp3.getLine1()
+      self.mp3Line2 = self.disp.mp3.getLine2()
 
     def showRadio(self):
       self.stopAllTimers()
@@ -337,11 +341,12 @@ class Display:
       self.sTextLine2.setText(self.getClock())
 
     def updateMp3StateBuffers(self):
+      if self.hasMp3Changed():
+        self.stopAllTimers()
+        self.sTextLine1.setText(self.disp.mp3.getLine1())
+        self.sTextLine2.setText(self.disp.mp3.getLine2())
+        self.sTextLine2.startScroll()
       return
-      # scroll song playing in line 1
-      # show time remaining in line 2
-      # self.sTextLine1.setText(self.disp.helper.centerText("Mp3"))
-      # self.sTextLine2.setText("")
 
     def updateRadioStateBuffers(self):
       return
@@ -360,6 +365,15 @@ class Display:
     def updateShutdownStateBuffers(self):
       self.sTextLine1.setText("Shutting down...")
       self.sTextLine2.setText("")
+
+    def hasMp3Changed(self):
+      line1 = self.disp.mp3.getLine1()
+      line2 = self.disp.mp3.getLine2()
+      if self.mp3Line1 != line1 and self.mp3Line2 != line2:
+        self.mp3Line1 = self.disp.mp3.getLine1()
+        self.mp3Line2 = self.disp.mp3.getLine2()
+        return True
+      return False
 
     ####################
     # UPDATE LCD DISPLAY
