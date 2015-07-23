@@ -47,8 +47,7 @@ class Display:
 
     # Mp3
     self.mp3 = Mp3Display()
-    self.mp3Line1 = ""
-    self.mp3Line2 = ""
+    self.mp3Title = ""
 
     # Radio
     self.radio = RadioDisplay()
@@ -63,10 +62,13 @@ class Display:
     # Flashing text (for mute state)
     # Scrolling text (for now playing)    
       
-    def __init__(self, gpio = None):
+    def __init__(self, controller, gpio = None):
       threading.Thread.__init__(self)
       self.lock = threading.Lock()
-      
+
+      # Controller resource
+      self.controller = controller      
+
       # Display resource
       self.disp = Display(gpio)
       
@@ -283,8 +285,8 @@ class Display:
       self.prevState = self.state
       self.state = self.states.STATE_MP3
       self.lastMenu = self.state
-      self.mp3Line1 = self.disp.mp3.getLine1()
-      self.mp3Line2 = self.disp.mp3.getLine2()
+      mp3Status = self.controller.mp3.getStatus()
+      self.mp3Title = mp3Status['title']
 
     def showRadio(self):
       self.stopAllTimers()
@@ -341,12 +343,12 @@ class Display:
       self.sTextLine2.setText(self.getClock())
 
     def updateMp3StateBuffers(self):
-      if self.hasMp3Changed():
+      if self.hasMp3Changed() == True:
+        self.disp.mp3.set(self.controller.mp3.getStatus())
         self.stopAllTimers()
         self.sTextLine1.setText(self.disp.mp3.getLine1())
         self.sTextLine2.setText(self.disp.mp3.getLine2())
         self.sTextLine2.startScroll()
-      return
 
     def updateRadioStateBuffers(self):
       return
@@ -367,11 +369,9 @@ class Display:
       self.sTextLine2.setText("")
 
     def hasMp3Changed(self):
-      line1 = self.disp.mp3.getLine1()
-      line2 = self.disp.mp3.getLine2()
-      if self.mp3Line1 != line1 and self.mp3Line2 != line2:
-        self.mp3Line1 = self.disp.mp3.getLine1()
-        self.mp3Line2 = self.disp.mp3.getLine2()
+      status = self.controller.mp3.getStatus()
+      if self.mp3Title != status['title']:
+        self.mp3Title = status['title']
         return True
       return False
 

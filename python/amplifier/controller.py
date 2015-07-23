@@ -71,11 +71,6 @@ class Controller():
     # Tone
     self.bass = 0
     self.treble = 0
-
-    # Display Client Resource Threaded
-    self.display = Display.Worker()
-    self.display.start()
-    sleep(0.5)
     
     # Relay Resource
     self.relay = None
@@ -91,6 +86,11 @@ class Controller():
 
     # mpd control Resource
     self.mp3 = Mp3()
+
+    # Display Client Resource Threaded
+    self.display = Display.Worker(self)
+    self.display.start()
+    sleep(0.5)
   
   # json formatted ok response
   def ok(self, status = "ok"):
