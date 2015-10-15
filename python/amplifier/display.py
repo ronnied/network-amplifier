@@ -47,7 +47,6 @@ class Display:
 
     # Mp3
     self.mp3 = Mp3Display()
-    self.mp3Title = ""
 
     # Radio
     self.radio = RadioDisplay()
@@ -71,6 +70,7 @@ class Display:
 
       # Display resource
       self.disp = Display(gpio)
+      self.mp3Title = ""
       
       # Create text buffers but don't scroll or blink just yet
       self.sTextLine1 = ScrollingText.Worker("", 16, True, False, 0.8, False, 0.5)
@@ -286,7 +286,10 @@ class Display:
       self.state = self.states.STATE_MP3
       self.lastMenu = self.state
       mp3Status = self.controller.mp3.getStatus()
-      self.mp3Title = mp3Status['title']
+      if 'title' in mp3Status:
+        self.mp3Title = mp3Status['title']
+      else:
+        self.mp3Title = ''
 
     def showRadio(self):
       self.stopAllTimers()
@@ -370,7 +373,7 @@ class Display:
 
     def hasMp3Changed(self):
       status = self.controller.mp3.getStatus()
-      if self.mp3Title != status['title']:
+      if 'title' in status and self.mp3Title != status['title']:
         self.mp3Title = status['title']
         return True
       return False
