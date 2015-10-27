@@ -65,12 +65,14 @@ class PT2314:
     self._updateAttenuation()
     
   def setBass(self, bass):
+    bass = int(bass)
     if bass >= -14 and bass <= 14:
       self.bass = self._lookupTone(int(bass))
       self._updateBass()
     return self._lookupToneReverse(self.bass)
 
   def setTreble(self, treble):
+    treble = int(treble)
     if treble >= -14 and treble <= 14:
       self.treble = self._lookupTone(int(treble))
       self._updateTreble()

@@ -303,7 +303,7 @@ $( document ).ready(function() {
       network: {
         url: "http://" + window.location.hostname + "/",
         timer: null,
-        delay: 10000,
+        delay: 7000,
         init: function() {
           window.clearTimeout(amplifier.network.timer);
         },
@@ -313,11 +313,11 @@ $( document ).ready(function() {
             $.getJSON(amplifier.network.url + "get/all", function(json) {                            
               amplifier.updateStateFromDevice(json);
               amplifier.updateGui(json.state);
-              //if(amplifier.network.timer == null) {
+              if(amplifier.network.timer == null) {
                 amplifier.network.timer = setTimeout(function() {
                   amplifier.network.start()
                 }, amplifier.network.delay);
-              //}
+              }
             }).fail(function(json) {
               amplifier.showNetworkFailed();              
             });           
